@@ -8,7 +8,7 @@ class UserDetail(models.Model):
 	name = models.CharField(max_length=30)
 	password=models.CharField(max_length=30)
 	email=models.CharField(max_length=50)
-    bidCoins= models.IntegerField(default=0)
+	bidCoins= models.IntegerField(default=0)
 
 
 
