@@ -11,6 +11,9 @@ from .forms import *
 class FormView(generic.edit.FormView):
 	form_class  = UserForm
 	template_name = 'signup/SignUpForm.html'
+class LoginForm(generic.edit.FormView):
+    form_class = LoginForm
+    template_name = 'signup/loginForm.html'
 
 
 def signup(request):
@@ -20,13 +23,27 @@ def signup(request):
     try:
     	quer = UserDetail.objects.get(email=new_user.email)
     except UserDetail.DoesNotExist:
-        quer = None
-
-    if(quer == None):
-        new_user.save()
+        try:
+            quer=UserDetail.objects.get(userName=new_user.userName)
+        except UserDetail.DoesNotExist:
+            new_user.save()
+            return HttpResponseRedirect(reverse('signup:LoginForm'))
+        else:
+            return HttpResponse("Your username or email exist.")
     else:
-        return HttpResponseRedirect(reverse('polls:index'))
+       return HttpResponse("Your username or email exist.")
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
    # return HttpResponseRedirect(reverse('polls:index'))
+
+def login(request):
+    if request.method != 'POST':
+        raise Http404('Only POSTs are allowed')
+    try:
+        m = UserDetail.objects.get(userName=request.POST['username'])
+        if m.password == request.POST['password']:
+            request.session['UserDetail_id'] = m.id
+            return HttpResponse("you are logged in.")
+    except UserDetail.DoesNotExist:
+        return HttpResponse("Your username and password didn't match.")

@@ -12,3 +12,7 @@ class UserForm(forms.ModelForm):#user form pre build class
     	widgets = {'bidCoin':forms.HiddenInput()}
     	fields = '__all__'
 
+
+class LoginForm(forms.Form):
+	username = forms.CharField(max_length=30)
+	password = forms.CharField(widget=forms.PasswordInput)

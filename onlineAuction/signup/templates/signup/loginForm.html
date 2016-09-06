@@ -5,9 +5,9 @@
 
 <div class = "container">
 	<div id= "header">
-		<h1>SIGNUP PAGE</h1>
+		<h1>LOGIN PAGE</h1>
 	</div>
-	<form action="{% url 'signup:signUp' %}" method="post">
+	<form action="{% url 'signup:login' %}" method="post">
 		{% csrf_token %}
 		<div class = "forms">
 			<table id = "try">
