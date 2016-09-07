@@ -1,0 +1,164 @@
+
+#top 
+{
+	background-color : #03A9F4;
+	border : 1px solid #BDBDBD;
+	padding-top:10px;
+	padding-bottom:10px;
+	word-wrap: break-word;
+
+}
+
+#main 
+{
+	background-color : #CD853F;
+	border : 2px solid #69340F;
+	position: absolute;
+	margin-left:20px;
+	top:30%;
+	left:15%;
+	width:60%;
+	float: middle;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	word-wrap: break-word;
+
+}
+#navigate
+{
+
+	background-color : white;
+	border : 1px solid #69340F;
+	position: fixed;
+	width:15%;
+
+	top : 30%;
+	word-wrap: break-word;
+}
+
+#try2
+{
+
+	background-color : white;
+	border : 1px solid #69340F;
+	margin-left:28px;
+	width:20.75%;
+	position: absolute;
+	top : 30%;
+	left: 77%;
+	word-wrap: break-word;
+}
+#post1
+{
+	background-color: white;
+	text-align:left;
+	font-family: courier;
+	box-shadow: 6px 6px 5px #1e1e19;
+
+}
+#post1:hover
+{
+	margin-bottom:10px;
+	margin-left:10px;
+	border : 1px solid #000000;
+}
+#post2
+{
+	background-color: white;
+	text-align:left;
+	font-family: courier;
+	box-shadow: 6px 6px 5px #1e1e19;
+}
+
+#post2:hover
+{
+	margin-left:10px;
+	margin-bottom:10px;
+	border : 1px solid #000000;
+}
+#post3
+{
+	background-color: white;
+	text-align:left;
+	font-family: courier;
+	box-shadow: 6px 6px 5px #1e1e19;
+}
+#post3:hover
+{
+	margin-left:10px;
+	margin-bottom:10px;
+	border : 1px solid #000000;
+}
+#post4
+{
+	background-color: white;
+	text-align:left;
+	font-family: courier;
+	box-shadow: 6px 6px 5px #1e1e19;
+}
+#post4:hover
+{
+	margin-left:10px;
+	margin-bottom:10px;
+	border : 1px solid #000000;
+}
+#post5
+{
+	background-color: white;
+	text-align:left;
+	font-family: courier;
+	box-shadow: 6px 6px 5px #1e1e19;
+}
+#post5:hover
+{
+	margin-left:10px;
+	margin-bottom:10px;
+	border : 1px solid #000000;
+}
+a.try:link    
+{
+	color:black; 
+	background-color:transparent;
+	text-decoration:none
+}
+a.try:visited 
+{
+	color:black;
+	background-color:transparent;
+	text-decoration:none
+}
+a.try:hover   
+{
+	color:red;
+	background-color:transparent;
+	text-decoration:underline
+}
+a.try:active  
+{
+	color:yellow;
+	background-color:transparent;
+	text-decoration:underline
+}
+
+#author
+{
+	width: 60%;
+	height: 60%;
+	margin-top: 10%;
+	margin-left:20%;
+	margin-right:20%;
+	margin-bottom: 10%;
+}
+
+.stuff
+{
+	padding: 15px;
+}
+
+.headTab
+{
+	width: 100%;
+	padding: 15px;
+}

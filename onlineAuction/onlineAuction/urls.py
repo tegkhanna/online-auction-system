@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
 	url(r'^signup/', include('signup.urls')),
+	url(r'^portal/', include('portal.urls')),
     url(r'^admin/', admin.site.urls),
 ]

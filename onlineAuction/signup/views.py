@@ -49,7 +49,10 @@ def login(request):
         m = UserDetail.objects.get(userName=request.POST['username'])
         if m.password == request.POST['password']:
             request.session['userID'] = m.id
-            return HttpResponse("you are logged in.")
+            request.session['inSession'] = True
+            return HttpResponseRedirect(reverse('portal:index'))
+        else:
+            return HttpResponse("wronggg.")
     except UserDetail.DoesNotExist:
         return HttpResponse("Your username and password didn't match.")
 
@@ -57,10 +60,11 @@ def login(request):
 def visaReg(request):
     try:
         quer = UserDetail.objects.get(pk=request.session['userID'])
+
         if(quer.visa_set.count()==0):
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
-            HttpResponse("Visa Registered.")
+            return HttpResponse("Visa Registered.")
         else:
-            HttpResponse("already registered.")
+            return HttpResponse("already registered.")
     except UserDetail.DoesNotExist:
-        HttpResponse("you are not login.")
+        return HttpResponse("you are not login.")
