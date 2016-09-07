@@ -11,9 +11,14 @@ from .forms import *
 class FormView(generic.edit.FormView):
 	form_class  = UserForm
 	template_name = 'signup/SignUpForm.html'
+
 class LoginForm(generic.edit.FormView):
     form_class = LoginForm
     template_name = 'signup/loginForm.html'
+
+class VisaForm(generic.edit.FormView):
+    form_class  = VisaForm
+    template_name = 'signup/visa.html'
 
 
 def signup(request):
@@ -43,7 +48,19 @@ def login(request):
     try:
         m = UserDetail.objects.get(userName=request.POST['username'])
         if m.password == request.POST['password']:
-            request.session['UserDetail_id'] = m.id
+            request.session['userID'] = m.id
             return HttpResponse("you are logged in.")
     except UserDetail.DoesNotExist:
         return HttpResponse("Your username and password didn't match.")
+
+
+def visaReg(request):
+    try:
+        quer = UserDetail.objects.get(pk=request.session['userID'])
+        if(quer.visa_set.count()==0):
+            quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
+            HttpResponse("Visa Registered.")
+        else:
+            HttpResponse("already registered.")
+    except UserDetail.DoesNotExist:
+        HttpResponse("you are not login.")
