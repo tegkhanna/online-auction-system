@@ -1,0 +1,31 @@
+body
+{
+	background-color: #03A9F4;
+}
+#header
+{
+	position: relative;
+	margin-top:05%;
+	margin-left:40%;
+}
+.container
+{
+	width:100%;
+}
+.forms
+{
+	position: relative;
+	margin-top: 5%; 
+	height:100%;
+	background-color: #FFFFFF;
+
+}
+#try
+{
+	position: relative;
+	margin:auto;
+	top:10%;
+label
+{
+	color:#212121;
+}
