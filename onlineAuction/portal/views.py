@@ -9,10 +9,6 @@ from django.utils import timezone
 from signup.models import UserDetail
 
 from portal.models import banned_user
-def index(request):
-    template_name = 'portal/index.html'
-    context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
-    return render(request, template_name, context)
 def adminPage(request):
 	context = {'details': UserDetail.objects.all()}
 	template_name='portal/adminPage.html'
