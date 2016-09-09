@@ -1,0 +1,24 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
+<div  id="table">
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Name</th>
+    </tr>
+    {% for item in details %}
+    <tr> 
+        <td>{{ item.userName }}</td>
+        <td>{{ item.name }}</td>
+        <td>
+            
+           <a href="delete/{{item.id}}">Delete</a>
+            
+            
+        </td>
+     </tr>
+    {% endfor %}
+</table>
+</div>
+

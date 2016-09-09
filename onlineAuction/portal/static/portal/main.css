@@ -162,3 +162,14 @@ a.try:active
 	width: 100%;
 	padding: 15px;
 }
+
+#table{
+text-align: left;
+border: 1px solid black;
+}
+
+#table th{
+text-align: center;
+
+}
+

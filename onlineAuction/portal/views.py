@@ -11,3 +11,17 @@ def index(request):
     template_name = 'portal/index.html'
     context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
     return render(request, template_name, context)
+def admin_page(request):
+	context = {'details': UserDetail.objects.all()}
+	template_name='portal/admin_page.html'
+	return render(request, template_name, context)
+
+def delete_user(request,id):
+	b = UserDetail.objects.get(pk=id)
+	b.delete()
+	return HttpResponseRedirect(reverse('portal:admin_page'))
+
+
+
+
+
