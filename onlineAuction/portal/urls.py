@@ -6,8 +6,9 @@ app_name = 'portal'
 
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
-	url(r'^adminpage/$', views.admin_page, name='admin_page'),
-	url(r'delete/(?P<id>\d+)/$', views.delete_user, name='delete'),
+	url(r'^adminPage/$', views.adminPage, name='adminPage'),
+	url(r'delete/(?P<id>\d+)/$', views.deleteUser, name='delete'),
+	url(r'ban/(?P<id>\d+)/$', views.banUser, name='ban'),
 	
     
 

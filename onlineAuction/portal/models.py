@@ -3,6 +3,7 @@ from signup import models as userdetails
 # Create your models here.
 class banned_user(models.Model):
     userid=models.IntegerField()
+    
 
 
 
