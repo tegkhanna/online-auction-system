@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^signUpPage/$', views.FormView.as_view(), name='signUpPage'),
     url(r'^LoginForm/$', views.LoginForm.as_view(), name='LoginForm'),
     url(r'^VisaForm/$', views.VisaForm.as_view(), name='VisaForm'),
-    url(r'^signUp/$', views.signup, name='signUp'),
-    url(r'^login/$', views.login, name='login'),
-    url(r'^visa/$', views.visaReg, name='visaReg'),
+    url(r'^logout/$', views.Logout, name='logout'),
+    #url(r'^login/$', views.login, name='login'),
+    #url(r'^visa/$', views.visaReg, name='visaReg'),
 ]

@@ -8,10 +8,13 @@ from django.utils import timezone
 
 from signup.models import UserDetail
 from .forms import *
-def index(request):
+class IndexView(generic.TemplateView):
     template_name = 'portal/index.html'
-    context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
-    return render(request, template_name, context)
+    
+    def get(self, request, *args, **kwargs):
+        context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
+        return render(request, self.template_name, context)
+        
 
 
 class RegForm(generic.edit.FormView):
