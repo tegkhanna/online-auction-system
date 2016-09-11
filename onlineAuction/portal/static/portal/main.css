@@ -147,3 +147,18 @@ a.try:active
 	text-align: left;
 	font-size: 1.25vw;
 }
+#tablearticle{
+	margin-left: 10%;
+}
+#tablearticle img{
+	max-width: 40%;
+    height: auto;
+}
+#tablearticle td{
+	text-align: left;
+	font-size: 1.25vw;
+}
+#tablearticle th{
+	font-size: 2.25vw;
+	text-align: left;
+}

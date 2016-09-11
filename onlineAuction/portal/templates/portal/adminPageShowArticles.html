@@ -1,21 +1,28 @@
 {% load static %}
 
 
+<link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
 
-<div  id="table">
+
+<div  id="tablearticle">
 <table>
     <tr>
+        <th>Delete Article</th>
         <th>Article Name</th>
         <th>Category</th>
         <th>Description</th>
         <th>Minimum Bid</th>
+        <th>Image</th>
+
     </tr>
     {% for item in details %}
-    <tr> 
+    <tr>
+    <td><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
         <td>{{ item.articlename}}</td>
         <td>{{ item.category }}</td>
         <td>{{ item.desc }}</td>
         <td>{{ item.minbid}}</td>
+        <td><img src="{% static 'portal/article_images/'%}{{item.userid.id}}_{{item.id}}.jpg" alt="Image"></td>
 
      </tr>
     {% endfor %}

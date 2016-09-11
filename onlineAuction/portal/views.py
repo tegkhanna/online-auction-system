@@ -31,7 +31,10 @@ def showArticleDetails(request,id):
     template_name = 'portal/adminPageShowArticles.html'
     return render(request, template_name, context)
 
-
+def deleteArticle(request,userid,id):
+	b = articlereg.objects.get(pk=id)
+	b.delete()
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 
@@ -56,11 +59,12 @@ class RegForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             quer = UserDetail.objects.get(pk=request.session['userID'])
-            see=request.FILES['image']
-            quer.articlereg_set.create( status = request.POST['status'], 
+
+            art=quer.articlereg_set.create( status = request.POST['status'],
                                         timestart=request.POST['timestart'],articlename=request.POST['articlename'],
                                         category=request.POST['category'],desc=request.POST['desc'],
-                                        minbid=request.POST['minbid'],image=request.FILES['image'])
+                                        minbid=request.POST['minbid'])
+            art.articleimage_set.create(image=request.FILES['image'])
             return HttpResponse("Article Successfully Registered.")
         except UserDetail.DoesNotExist:
             return HttpResponse("Article Successfully Registered.")
