@@ -1,0 +1,23 @@
+{% load static %}
+
+
+
+<div  id="table">
+<table>
+    <tr>
+        <th>Article Name</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Minimum Bid</th>
+    </tr>
+    {% for item in details %}
+    <tr> 
+        <td>{{ item.articlename}}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.desc }}</td>
+        <td>{{ item.minbid}}</td>
+
+     </tr>
+    {% endfor %}
+</table>
+</div>

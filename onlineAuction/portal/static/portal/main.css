@@ -134,3 +134,16 @@ a.try:active
 	margin-bottom: 10%;
 }
 
+#table{
+	margin-left: 40%;
+
+}
+
+#table th{
+	font-size: 2.25vw;
+	text-align: left;
+}
+#table td{
+	text-align: left;
+	font-size: 1.25vw;
+}

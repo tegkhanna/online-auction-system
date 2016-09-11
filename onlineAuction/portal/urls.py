@@ -9,7 +9,7 @@ urlpatterns = [
 	url(r'^adminPage/$', views.adminPage, name='adminPage'),
 	url(r'delete/(?P<id>\d+)/$', views.deleteUser, name='delete'),
 	url(r'ban/(?P<id>\d+)/$', views.banUser, name='ban'),
-	
+	url(r'showArticles/(?P<id>\d+)/$', views.showArticleDetails, name='showArticles'),
     
 
 

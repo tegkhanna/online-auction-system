@@ -7,6 +7,7 @@ from django.utils import timezone
 # Create your views here.
 
 from signup.models import UserDetail
+from portal.models import articlereg
 
 from portal.models import banned_user
 def adminPage(request):
@@ -25,6 +26,10 @@ def banUser(request,id):
 		ob=banned_user(userid=id)
 		ob.save()
 	return HttpResponseRedirect(reverse('portal:adminPage'))
+def showArticleDetails(request,id):
+    context = {'details': articlereg.objects.filter(userid=id)}
+    template_name = 'portal/adminPageShowArticles.html'
+    return render(request, template_name, context)
 
 
 
