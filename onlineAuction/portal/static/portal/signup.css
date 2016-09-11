@@ -1,12 +1,10 @@
-body
-{
-	background-color: #03A9F4;
-}
+
 #header
 {
 	position: relative;
 	margin-top:05%;
-	margin-left:40%;
+	margin-left:0%;
+	background-color: #8BC34A;
 }
 .container
 {
@@ -25,6 +23,7 @@ body
 	position: relative;
 	margin:auto;
 	top:10%;
+}
 label
 {
 	color:#212121;
