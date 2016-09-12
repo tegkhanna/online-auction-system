@@ -22,7 +22,10 @@ class FormView(generic.edit.FormView):
                 quer=UserDetail.objects.get(userName=new_user.userName)
             except UserDetail.DoesNotExist:
                 new_user.save()
-                return HttpResponseRedirect(reverse('signup:LoginForm'))
+                quer=UserDetail.objects.get(userName=new_user.userName)
+                request.session['userID'] = quer.id
+                request.session['inSession'] = True
+                return HttpResponseRedirect(reverse('portal:index'))
             else:
                 return HttpResponse("Your username or email exist.")
         else:
@@ -58,7 +61,7 @@ class VisaForm(generic.edit.FormView):
         form = self.form_class
         quer = UserDetail.objects.get(pk=request.session['userID'])
         if(quer.visa_set.count()==0):
-            return render(request, self.template_name, {'form':form})
+            return render(request, self.template_name, {'form':form, 'userName':quer.name})
         else:
             return HttpResponse("already registered.")
 

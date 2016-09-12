@@ -4,8 +4,8 @@ class UserForm(forms.ModelForm):#user form pre build class
     password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
     	model = UserDetail
-    	widgets = {'bidCoin':forms.HiddenInput()}
-    	fields = '__all__'
+    	exclude = ['bidCoins']
+    	
 
 
 class LoginForm(forms.Form):

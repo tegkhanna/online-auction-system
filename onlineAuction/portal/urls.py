@@ -16,5 +16,6 @@ urlpatterns = [
 
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^RegForm/$', views.RegForm.as_view(), name='RegForm'),
+    url(r'^UserShowArticle/$', views.UserShowArticles.as_view(), name='userArticles'),
 
 ]

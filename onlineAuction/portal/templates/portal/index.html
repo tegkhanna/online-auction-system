@@ -1,27 +1,15 @@
+{% extends 'portal/base.html' %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
 
+{% block content %}
 
-<div>
-				<div id = "top">
-					<h1 style = "text-align:center">
-					USER PORTAL
-					</h1>
-					<h3>welcome {{userName}}</h3>
-				</div>
-				
 
-				<div id = "navigate">
-					<h4 align = "center">JUMP TO</h4>
-					
-					<ul>
-					<li><a class = "try" href="{% url 'portal:RegForm' %}"><b>ADD ARTICLE</b></a></li>
-					<li><a class = "try" href="{% url 'signup:VisaForm' %}"><b>VISA REGISTER</b></a></li>
-					<li><a class = "try" href="#post3"><b>HELLO ALL :)</b></a></li>
-					<li><a class = "try" href="#post4"><b>RANDOM POST</b></a></li>
-					<li><a class = "try" href="{% url 'signup:logout' %}"><b>LOGOUT</b></a></li>
-					
-					</ul>
-				</div>
+<div class = "container">
+    <div id= "header">
+        <h1>HOME</h1>
+    </div>
+
 </div>
+{% endblock %}

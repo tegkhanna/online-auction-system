@@ -1,8 +1,9 @@
+{% extends 'portal/base.html' %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
 
-
+{% block content %}
 <div class = "container">
 	<div id= "header">
 		<h1>VISA REGISTERATION</h1>
@@ -20,3 +21,5 @@
 	</form>
 
 </div>
+
+{% endblock %}

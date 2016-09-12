@@ -39,6 +39,9 @@ def deleteArticle(request,userid,id):
 
 
 
+
+
+
 from .forms import *
 class IndexView(generic.TemplateView):
     template_name = 'portal/index.html'
@@ -68,3 +71,32 @@ class RegForm(generic.edit.FormView):
             return HttpResponse("Article Successfully Registered.")
         except UserDetail.DoesNotExist:
             return HttpResponse("Article Successfully Registered.")
+
+"""class EditArticle(generic.edit.FormView):
+    form_class  = RegForm
+    template_name = 'portal/articleForm.html'
+    def get(self, request,a_id, *args, **kwargs):
+        data = articlereg.objects.get(pk=a_id)
+        context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name,
+                     'form':self.form_class(initial = data)}
+        return render(request, self.template_name, context)
+    def post(self, request, *args, **kwargs):
+        try:
+            quer = UserDetail.objects.get(pk=request.session['userID'])
+            art
+            art=quer.articlereg_set.create( status = request.POST['status'],
+                                        timestart=request.POST['timestart'],articlename=request.POST['articlename'],
+                                        category=request.POST['category'],desc=request.POST['desc'],
+                                        minbid=request.POST['minbid'])
+            art.articleimage_set.create(image=request.FILES['image'])
+            return HttpResponse("Article Successfully Registered.")
+        except UserDetail.DoesNotExist:
+            return HttpResponse("Article Successfully Registered.")"""
+
+
+class UserShowArticles(generic.TemplateView):
+    template_name = 'portal/usershowarticle.html'
+    def get(self, request, *args, **kwargs):
+        quer = UserDetail.objects.get(pk=request.session['userID'])
+        context = {'details': articlereg.objects.filter(userid = quer), 'userName':quer.name}
+        return render(request, self.template_name, context)
