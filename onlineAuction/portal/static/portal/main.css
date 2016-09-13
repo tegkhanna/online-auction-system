@@ -52,6 +52,11 @@ body
 	font-size: 1vw;
 
 }
+#try img{
+	max-width: 300%;
+    height: auto;
+
+}
 img{
 	max-width: 200%;
     height: auto;
@@ -87,7 +92,7 @@ label
     font-size: 1.25vw;
 	top : 40%;
 
-}
+}ffg
 
 #try2
 {
@@ -152,7 +157,12 @@ a.try:active
 	text-align: left;
 	font-size: 1.25vw;
 }
-#tablearticle{
+#tablearticle{font-family: "Trebuchet MS", sans-serif;
+
+    font-weight: bold;
+    line-height: 1.4em;
+    font-style: normal;
+    border-collapse:separate;
 	margin-left: 10%;
 }
 #tablearticle img{
