@@ -22,7 +22,7 @@
         <td>{{ item.category }}</td>
         <td>{{ item.desc }}</td>
         <td>{{ item.minbid}}</td>
-        <td><img src="{% static 'portal/article_images/'%}{{item.userid.id}}_{{item.id}}.jpg" alt="Image"></td>
+        <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
 
      </tr>
     {% endfor %}

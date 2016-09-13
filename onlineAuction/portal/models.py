@@ -24,8 +24,10 @@ class articlereg(models.Model):
     minbid=models.FloatField(default=0.0)
 
 class articleimage(models.Model):
-    article=models.ForeignKey(articlereg)
-    image=models.ImageField(upload_to=content_file_name,default='article_images/'+str(id)+'.jpg')
+    def __str__(self):
+        return str(self.image).split('/')[-1]
+    article = models.ForeignKey(articlereg)
+    image = models.ImageField(upload_to=content_file_name,default='article_images/'+str(id)+'.jpg')
 class bids(models.Model):
     userid=models.ForeignKey(userdetails.UserDetail)
     articleid=models.ForeignKey(articlereg)

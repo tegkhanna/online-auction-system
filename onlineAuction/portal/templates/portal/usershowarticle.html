@@ -17,6 +17,7 @@
         <table id = "try">
             <tr>
                 <th>Delete Article</th>
+                <th>Edit Article</th>
                 <th>Article Name</th>
                 <th>Category</th>
                 <th>Description</th>
@@ -26,14 +27,15 @@
             </tr>
             {% for item in details %}
             <tr>
-            <td><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
+                <td><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
+                <td><a href="EditArticles/{{item.id}}">edit</a></td>
                 <td>{{ item.articlename}}</td>
                 <td>{{ item.category }}</td>
                 <td>{{ item.desc }}</td>
                 <td>{{ item.minbid}}</td>
-                <td><img src="{% static 'portal/article_images/'%}{{item.userid.id}}_{{item.id}}.jpg" alt="Image"></td>
+                <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
 
-             </tr>
+            </tr>
             {% endfor %}
         </table>
     </div>
