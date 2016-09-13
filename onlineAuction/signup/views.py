@@ -47,6 +47,8 @@ class LoginForm(generic.edit.FormView):
             if m.password == request.POST['password']:
                 request.session['userID'] = m.id
                 request.session['inSession'] = True
+                if request.POST['username']=='apoo' and request.POST['password']=='pass':
+                    request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:index'))
             else:
                 return HttpResponse("wronggg.")
@@ -77,6 +79,9 @@ def Logout(request):
     try:
         request.session['inSession'] = False
         del request.session['userID']
+        if 'adminSession' in request.session:
+            if request.session['adminSession'] ==True:
+                request.session['adminSession'] = False
     except KeyError:
         pass
     return HttpResponseRedirect(reverse('signup:LoginForm'))

@@ -10,32 +10,59 @@ from signup.models import UserDetail
 from portal.models import articlereg
 
 from portal.models import banned_user
+def isadmin(request):
+    if 'adminSession' in request.session:
+        if request.session['adminSession']==True:
+                return True
+        else:
+            return False
+    else:
+        return False
+
 def adminPage(request):
-	context = {'details': UserDetail.objects.all()}
-	template_name='portal/adminPage.html'
-	return render(request, template_name, context)
+    if isadmin(request):
+	    context = {'details': UserDetail.objects.all()}
+	    template_name='portal/adminPage.html'
+	    return render(request, template_name, context)
+    else:
+        return HttpResponse("Login as admin to proceed.")
+
+
+
 
 def deleteUser(request,id):
-	b = UserDetail.objects.get(pk=id)
-	b.delete()
-	return HttpResponseRedirect(reverse('portal:adminPage'))
+    if isadmin(request):
+	    b = UserDetail.objects.get(pk=id)
+	    b.delete()
+	    return HttpResponseRedirect(reverse('portal:adminPage'))
+    else:
+        return HttpResponse("Login as admin to proceed.")
+
 def banUser(request,id):
-	if banned_user.objects.filter(userid=id).exists():
-		pass
-	else:
-		ob=banned_user(userid=id)
-		ob.save()
-	return HttpResponseRedirect(reverse('portal:adminPage'))
+    if isadmin(request):
+	    if banned_user.objects.filter(userid=id).exists():
+		    pass
+	    else:
+		    ob=banned_user(userid=id)
+		    ob.save()
+	    return HttpResponseRedirect(reverse('portal:adminPage'))
+    else:
+        return HttpResponse("Login as admin to proceed.")
 def showArticleDetails(request,id):
-    context = {'details': articlereg.objects.filter(userid=id)}
-    template_name = 'portal/adminPageShowArticles.html'
-    return render(request, template_name, context)
+    if isadmin(request):
+        context = {'details': articlereg.objects.filter(userid=id)}
+        template_name = 'portal/adminPageShowArticles.html'
+        return render(request, template_name, context)
+    else:
+        return HttpResponse("Login as admin to proceed.")
 
 def deleteArticle(request,userid,id):
-	b = articlereg.objects.get(pk=id)
-	b.delete()
-	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+    if isadmin(request):
+	    b = articlereg.objects.get(pk=id)
+	    b.delete()
+	    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponse("Login as admin to proceed.")
 
 
 
