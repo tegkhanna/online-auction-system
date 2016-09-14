@@ -146,34 +146,53 @@ a.try:active
 
 #table{
 	margin-left: 40%;
-
-}
-
-#table th{
-	font-size: 2.25vw;
-	text-align: left;
-}
-#table td{
-	text-align: left;
-	font-size: 1.25vw;
-}
-#tablearticle{font-family: "Trebuchet MS", sans-serif;
-
+	font-family: "Trebuchet MS", sans-serif;
+	cursor:default;
     font-weight: bold;
     line-height: 1.4em;
     font-style: normal;
     border-collapse:separate;
-	margin-left: 10%;
+
+
+}
+#table td:hover {background-color: #f5f5f5;
+					border: 3px solid deeppink;}
+
+#table th{
+	font-size: 2.25vw;
+	text-align: center;
+	color:darkblue;
+
+}
+#table td{
+	text-align: center;
+	border: 3px solid pink;
+	font-size: 1.25vw;
+	border-collapse:separate;
+}
+#tablearticle{font-family: "Trebuchet MS", sans-serif;
+	cursor:default;
+    font-weight: bold;
+    line-height: 1.4em;
+    font-style: normal;
+    border-collapse:separate;
+	margin-left: 30%;
 }
 #tablearticle img{
 	max-width: 40%;
     height: auto;
 }
 #tablearticle td{
-	text-align: left;
+	text-align: center;
+	border: 3px solid pink;
 	font-size: 1.25vw;
+	border-collapse:separate;
 }
-#tablearticle th{
+
+#tablearticle td:hover {background-color: #f5f5f5;
+					border: 3px solid deeppink;}
+#tablearticle th{	text-align: center;
+	color:darkblue;
+
 	font-size: 2.25vw;
-	text-align: left;
 }

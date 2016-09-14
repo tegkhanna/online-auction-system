@@ -2,7 +2,25 @@
 
 
 <link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
+<div>
+				<div id = "top">
+					<h1 style = "text-align:center">
+					ADMIN PORTAL
+					</h1>
+					<h3>Welcome Admin</h3>
+				</div>
 
+
+				<div id = "navigate">
+					<h4 align = "center">JUMP TO</h4>
+
+					<ul>
+					<li><a class = "try" href="{% url 'portal:adminPage' %}"><b>Home</b></a></li>
+                    <li><a class = "try" href="{% url 'signup:logout' %}"><b>LOGOUT</b></a></li>
+
+					</ul>
+				</div>
+</div>
 
 <div  id="tablearticle">
 <table>

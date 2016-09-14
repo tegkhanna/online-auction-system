@@ -57,7 +57,7 @@ def showArticleDetails(request,id):
         return HttpResponse("Login as admin to proceed.")
 
 def deleteArticle(request,userid,id):
-    if isadmin(request):
+    if isadmin(request) or (('inSession' in request.session) and request.session['inSession'] ==False) :
 	    b = articlereg.objects.get(pk=id)
 	    b.delete()
 	    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

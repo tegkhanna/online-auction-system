@@ -8,7 +8,7 @@
 					<h1 style = "text-align:center">
 					ADMIN PORTAL
 					</h1>
-					<h3>Welcome {{userName}}</h3>
+					<h3>Welcome Admin</h3>
 				</div>
 
 
@@ -16,16 +16,13 @@
 					<h4 align = "center">JUMP TO</h4>
 
 					<ul>
-					<li><a class = "try" href="{% url 'portal:RegForm' %}"><b>ADD ARTICLE</b></a></li>
-					<li><a class = "try" href="{% url 'signup:VisaForm' %}"><b>VISA REGISTER</b></a></li>
-					<li><a class = "try" href="#post3"><b>HELLO ALL :)</b></a></li>
-					<li><a class = "try" href="#post4"><b>RANDOM POST</b></a></li>
-					<li><a class = "try" href="{% url 'signup:logout' %}"><b>LOGOUT</b></a></li>
+					<li><a class = "try" href="{% url 'portal:adminPage' %}"><b>Home</b></a></li>
+                    <li><a class = "try" href="{% url 'signup:logout' %}"><b>LOGOUT</b></a></li>
 
 					</ul>
 				</div>
 </div>
-</div>
+
 
 <div  id="table">
 <table>
