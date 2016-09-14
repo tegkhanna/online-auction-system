@@ -19,6 +19,7 @@
                 <th>Delete Article</th>
                 <th>Edit Article</th>
                 <th>Article Name</th>
+                <th>Article Status</th>
                 <th>Category</th>
                 <th>Description</th>
                 <th>Minimum Bid</th>
@@ -30,6 +31,7 @@
                 <td><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
                 <td><a href="EditArticles/{{item.id}}">edit</a></td>
                 <td>{{ item.articlename}}</td>
+                <td>{{ item.status}}</td>
                 <td>{{ item.category }}</td>
                 <td>{{ item.desc }}</td>
                 <td>{{ item.minbid}}</td>
