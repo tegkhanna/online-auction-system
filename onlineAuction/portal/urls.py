@@ -19,5 +19,5 @@ urlpatterns = [
     url(r'^RegForm/$', views.RegForm.as_view(), name='RegForm'),
     url(r'^UserShowArticle/$', views.UserShowArticles.as_view(), name='userArticles'),
 	url(r'^UserShowArticle/EditArticles/(?P<a_id>\d+)/$', views.EditArticle.as_view(), name='editArticles'),
-	url(r'^ActiveBids/BidPage/(?P<a_id>\d+)/$', views.Bid.as_view(), name='Bid'),
+	url(r'^activeArticles/BidPage/(?P<a_id>\d+)/$', views.Bid.as_view(), name='Bid'),
 ]

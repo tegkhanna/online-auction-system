@@ -17,14 +17,15 @@
 			<table id = "try">
 				
 				<tr>
-				<td colspan = "6" align="center">
-				<img id = "artImg" src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image">
+				<td colspan = "6" >
+				<img id = "artImg" src="{% static 'portal/article_images/'%}{{bid.articleid.articleimage_set.reverse.0}}" alt="Image">
 				</td>
 				</tr>
 				<tr>
-				<th colspan = "2" align="center">HIGHEST</th>
-				<td colspan = "2" align="center">{{bid.userDetails.username}}</td>
-				<td colspan = "2" align="center">{{bid.highestbid}}</td></tr>
+				<th colspan = "1" align="left">HIGHEST</th>
+				<th colspan = "3" align="center">{{bid.userid.userName}}</th>
+				<th colspan = "2" align="left">{{bid.highestbid}}</th>
+				</tr>
 				{{form}}
 				<tr><td colspan = "6" align="center"><input type="submit" value="Submit" /></td></tr>
 			</table>

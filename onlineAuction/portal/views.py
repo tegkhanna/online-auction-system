@@ -92,15 +92,6 @@ def activebids(request):
 
 
 
-
-
-
-
-
-
-
-
-
 from .forms import *
 class IndexView(generic.TemplateView):
 
@@ -200,10 +191,11 @@ class Bid(generic.edit.FormView):
         return render(request, self.template_name, context)
     def post(self, request,a_id, *args, **kwargs):
         bid = articlereg.objects.get(pk = a_id).bids_set.reverse()[0]
-        if(bid.highestbid < request.POST['highestbid']):
-            bid.highestbid = request.POST['highestbid']
+        if(bid.highestbid < float(request.POST['highestbid'])):
+            bid.highestbid = float(request.POST['highestbid'])
             bid.userid = UserDetail.objects.get(pk=request.session['userID'])
-            return HttpResponseRedirect(reverse("ActiveBids/BidPage/" + str(a_id)))
+            bid.save()
+            return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
         else:
             pass
 
