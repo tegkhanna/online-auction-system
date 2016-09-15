@@ -8,7 +8,7 @@ class UserDetail(models.Model):
 	name = models.CharField(max_length=30)
 	password=models.CharField(max_length=30)
 	email=models.CharField(max_length=50)
-	bidCoins= models.IntegerField(default=0)
+
 
 class Visa(models.Model):
 	def __str__(self):
@@ -18,5 +18,10 @@ class Visa(models.Model):
 	expDate=models.DateTimeField()
 
 
-
+class Admins(models.Model):
+	def __str__(self):
+		return str(self.id)
+	userName=models.CharField(max_length=30)
+	name = models.CharField(max_length=30)
+	password=models.CharField(max_length=30)
 

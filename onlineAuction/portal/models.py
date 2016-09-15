@@ -16,7 +16,6 @@ class articlereg(models.Model):
     def __str__(self):
         return str(self.id)
     userid=models.ForeignKey(userdetails.UserDetail)
-    status=models.CharField(max_length=10)
     timestart=models.DateTimeField()
     articlename=models.CharField(max_length=40)
     category=models.CharField(max_length=40)
