@@ -29,7 +29,7 @@ class FormView(generic.edit.FormView):
             else:
                 return HttpResponse("Your username or email exist.")
         else:
-           return HttpResponse("Your username or email exist.")
+            return HttpResponse("Your username or email exist.")
 
 
 class LoginForm(generic.edit.FormView):
@@ -37,23 +37,33 @@ class LoginForm(generic.edit.FormView):
     template_name = 'signup/loginForm.html'
     def get(self, request, *args, **kwargs):
         form = self.form_class
-        if((request.session['inSession'] is False) or (request.session['inSession'] is None)):
+        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and (request.session['adminSession'] is False)):
             return render(request, self.template_name, {'form':form})
+        elif(request.session['adminSession'] is True):
+            return HttpResponseRedirect(reverse('portal:adminPage'))
         else:
             return HttpResponseRedirect(reverse('portal:index'))
     def post(self, request, *args, **kwargs):
         try:
-            m = UserDetail.objects.get(userName=request.POST['username'])
+            m = Admins.objects.get(userName=request.POST['username'])
             if m.password == request.POST['password']:
-                request.session['userID'] = m.id
-                request.session['inSession'] = True
-                if request.POST['username']=='apoo' and request.POST['password']=='pass':
-                    request.session['adminSession'] = True
-                return HttpResponseRedirect(reverse('portal:index'))
+                request.session['inSession'] = False
+                request.session['adminSession'] = True
+                return HttpResponseRedirect(reverse('portal:adminPage'))
             else:
                 return HttpResponse("wronggg.")
-        except UserDetail.DoesNotExist:
-            return HttpResponse("Your username and password didn't match.")
+        except Admins.DoesNotExist:
+            try:
+                m = UserDetail.objects.get(userName=request.POST['username'])
+                if m.password == request.POST['password']:
+                    request.session['userID'] = m.id
+                    request.session['inSession'] = True
+                    request.session['adminSession'] = False
+                    return HttpResponseRedirect(reverse('portal:index'))
+                else:
+                    return HttpResponse("wronggg.")
+            except UserDetail.DoesNotExist:
+                return HttpResponse("Your username and password didn't match.")
 
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm
@@ -78,10 +88,11 @@ class VisaForm(generic.edit.FormView):
 def Logout(request):
     try:
         request.session['inSession'] = False
-        del request.session['userID']
+        
         if 'adminSession' in request.session:
-            if request.session['adminSession'] ==True:
+            if request.session['adminSession'] == True:
                 request.session['adminSession'] = False
+        del request.session['userID']
     except KeyError:
         pass
     return HttpResponseRedirect(reverse('signup:LoginForm'))

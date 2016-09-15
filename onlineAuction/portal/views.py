@@ -130,13 +130,9 @@ class RegForm(generic.edit.FormView):
             delta = timedelta(days = int(time.day),hours = int(time.hour),minutes = int(time.minute),seconds = int(time.second))
             timedif = (deltaNow - delta).seconds
             stat = None
-            if(time < datetime.now()):
+            if(timedif < 0):
                 return HttpResponse("ENTER CORRECT DATE TIME")
-            elif(timedif > 3600):
-                stat = "inactive"
-            elif(timedif < 3600 and timedif > 0):
-                stat = "active"
-            art=quer.articlereg_set.create( status = stat,
+            art=quer.articlereg_set.create(
                                         timestart=request.POST['timestart'],articlename=request.POST['articlename'],
                                         category=request.POST['category'],desc=request.POST['desc'],
                                         minbid=request.POST['minbid'])
@@ -171,22 +167,14 @@ class EditArticle(generic.edit.FormView):
             art.minbid=request.POST['minbid']
             img = art.articleimage_set.reverse()[0]
             img.image =request.FILES['image']
-            #status update
+            #time check
             time = dateparse.parse_datetime(request.POST['timestart'])
             now = datetime.now()
             deltaNow = timedelta(days = int(now.day),hours = int(now.hour),minutes = int(now.minute),seconds = int(now.second))
             delta = timedelta(days = int(time.day),hours = int(time.hour),minutes = int(time.minute),seconds = int(time.second))
             timedif = (deltaNow - delta).seconds
-            stat = None
-            if(timedif < 3600 and timedif > 0):
-                stat = "active"
-            elif(time < datetime.now()):
+            if(timedif < 0):
                 return HttpResponse("ENTER CORRECT DATE TIME")
-            elif(timedif > 3600):
-                stat = "inactive"
-
-            art.status = stat
-
             img.save()
             art.save()
             return HttpResponseRedirect(reverse("portal:userArticles"))
