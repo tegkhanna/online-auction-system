@@ -3,7 +3,7 @@ from .models import *
 
 class RegForm(forms.Form):#user form pre build class
     
-    timestart=forms.DateTimeField()
+    timestart=forms.DateTimeField(widget=forms.widgets.DateTimeInput)
     articlename=forms.CharField(max_length=40)
     Choices=(('Book','Book'),('Vehicle','Vehicle'),('Coin or Stamp','Coin or Stamp'),('Antique','Antique'),
              ('Electronics','Electronics'),('Others','Others'))
@@ -13,7 +13,7 @@ class RegForm(forms.Form):#user form pre build class
     image=forms.ImageField()
 
 class EditRegForm(forms.Form):#user form pre build class
-    timestart=forms.DateTimeField()
+    timestart=forms.DateTimeField(widget=forms.widgets.DateTimeInput)
     articlename=forms.CharField(max_length=40)
     Choices=(('Book','Book'),('Vehicle','Vehicle'),('Coin or Stamp','Coin or Stamp'),('Antique','Antique'),
              ('Electronics','Electronics'),('Others','Others'))
