@@ -1,0 +1,34 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
+{% block content %}
+
+
+<div  id="tablearticle">
+<table>
+    <tr>
+        <th>Start Bid</th>
+        <th>Article Name</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Minimum Bid</th>
+        <th>Image</th>
+
+    </tr>
+{% for item in active %}
+
+    <tr>
+    <td><a href="bidpage/{{item.id}}">Bid on this</a></td>
+        <td>{{ item.articlename}}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.desc }}</td>
+        <td>{{ item.minbid}}</td>
+        <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
+
+     </tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

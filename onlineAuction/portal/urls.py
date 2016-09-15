@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'showArticles/(?P<userid>\d+)/deleteArticle/(?P<id>\d+)/$', views.deleteArticle, name='delete'),
 	url(r'ban/(?P<id>\d+)/$', views.banUser, name='ban'),
 	url(r'showArticles/(?P<id>\d+)/$', views.showArticleDetails, name='showArticles'),
+	url(r'activeArticles/$', views.activebids, name='activeArticles'),
     
 
 

@@ -64,6 +64,38 @@ def deleteArticle(request,userid,id):
     else:
         return HttpResponse("Login as admin to proceed.")
 
+def activebids(request):
+    articles=articlereg.objects.all()
+    active_articles=[]
+    now = timezone.now()
+    for a in articles:
+        endtime=a.timestart+timedelta(hours=1)
+        if now>=a.timestart and now <endtime:
+            active_articles.append(a.id)
+    context = {'active': articlereg.objects.filter(id__in = active_articles)}
+    template_name = 'portal/activeArticles.html'
+    return render(request, template_name, context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,8 +103,8 @@ def deleteArticle(request,userid,id):
 
 from .forms import *
 class IndexView(generic.TemplateView):
+
     template_name = 'portal/index.html'
-    
     def get(self, request, *args, **kwargs):
         try:
             context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
