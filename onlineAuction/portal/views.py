@@ -105,6 +105,7 @@ class RegForm(generic.edit.FormView):
                                         category=request.POST['category'],desc=request.POST['desc'],
                                         minbid=request.POST['minbid'])
             art.articleimage_set.create(image=request.FILES['image'])
+            art.bids_set.create(userid = UserDetail.objects.get(pk=request.session['userID']), highestbid = request.POST['minbid'])
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
             return HttpResponse("Article NOT Registered.")
@@ -145,6 +146,7 @@ class EditArticle(generic.edit.FormView):
                 return HttpResponse("ENTER CORRECT DATE TIME")
             img.save()
             art.save()
+            art.bids_set.reverse()[0].highestbid = art.minbid
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
             return HttpResponse("Article NOT Registered.")
@@ -156,5 +158,21 @@ class UserShowArticles(generic.TemplateView):
         quer = UserDetail.objects.get(pk=request.session['userID'])
         context = {'details': articlereg.objects.filter(userid = quer), 'userName':quer.name}
         return render(request, self.template_name, context)
+
+class Bid(generic.edit.FormView):
+    form_class = BidPrice
+    template_name = 'portal/BidArticle.html'
+    def get(self, request,a_id, *args, **kwargs):
+        quer = UserDetail.objects.get(pk=request.session['userID'])
+        context = {'bid': articlereg.objects.get(pk = a_id).bids_set.reverse()[0], 'userName':quer.name, 'form':self.form_class}
+        return render(request, self.template_name, context)
+    def post(self, request,a_id, *args, **kwargs):
+        bid = articlereg.objects.get(pk = a_id).bids_set.reverse()[0]
+        if(bid.highestbid < request.POST['highestbid']):
+            bid.highestbid = request.POST['highestbid']
+            bid.userid = UserDetail.objects.get(pk=request.session['userID'])
+            return HttpResponseRedirect(reverse("ActiveBids/BidPage/" + str(a_id)))
+        else:
+            pass
 
 

@@ -21,3 +21,6 @@ class EditRegForm(forms.Form):#user form pre build class
     desc=forms.CharField(max_length=150)
     minbid=forms.FloatField()
     image=forms.ImageField()
+
+class BidPrice(forms.Form):
+     highestbid = forms.FloatField()

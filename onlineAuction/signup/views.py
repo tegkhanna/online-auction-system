@@ -37,9 +37,9 @@ class LoginForm(generic.edit.FormView):
     template_name = 'signup/loginForm.html'
     def get(self, request, *args, **kwargs):
         form = self.form_class
-        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and (request.session['adminSession'] is False)):
+        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
             return render(request, self.template_name, {'form':form})
-        elif(request.session['adminSession'] is True):
+        elif((request.session['adminSession'] is True)):
             return HttpResponseRedirect(reverse('portal:adminPage'))
         else:
             return HttpResponseRedirect(reverse('portal:index'))
