@@ -1,0 +1,25 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}" />
+
+
+<div class = "container">
+	<div id= "header">
+		<h1>WELCOME TO THE ONLINE AUCTION SYSTEM</h1>
+		<h3>PLEASE SIGNUP OR LOGIN</h3>
+	</div>
+
+	<div class = "forms">
+		<table id = "try">
+			<tr>
+			<th colspan = "2" align="center"><a href="{% url 'signup:signUpPage' %}">SIGUNUP</a></th>
+			<th colspan = "2" align="center"></th>
+			<th colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">LOGIN</a></th>
+			</tr>
+		</table>
+	
+	</div>
+
+
+
+</div>

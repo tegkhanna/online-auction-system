@@ -8,10 +8,17 @@ from django.utils import timezone
 from .models import *
 from .forms import *
 # Create your views here.
-class FormView(generic.edit.FormView):
+class Signup(generic.edit.FormView):
     form_class  = UserForm
     template_name = 'signup/SignUpForm.html'
-
+    def get(self, request, *args, **kwargs):
+        form = self.form_class
+        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+            return render(request, self.template_name, {'form':form})
+        elif((request.session['adminSession'] is True)):
+            return HttpResponseRedirect(reverse('portal:adminPage'))
+        else:
+            return HttpResponseRedirect(reverse('portal:index'))
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         new_user = form.save(commit=False)
@@ -30,6 +37,19 @@ class FormView(generic.edit.FormView):
                 return HttpResponse("Your username or email exist.")
         else:
             return HttpResponse("Your username or email exist.")
+
+
+
+class IndexView(generic.TemplateView):
+    template_name = 'signup/index.html'
+    def get(self, request, *args, **kwargs):
+        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+            return render(request, self.template_name)
+        elif((request.session['adminSession'] is True)):
+            return HttpResponseRedirect(reverse('portal:adminPage'))
+        else:
+            return HttpResponseRedirect(reverse('portal:index'))
+
 
 
 class LoginForm(generic.edit.FormView):
