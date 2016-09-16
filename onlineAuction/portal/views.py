@@ -31,7 +31,7 @@ def adminPage(request):
 
 
 def deleteUser(request,id):
-    if isadmin(request):
+    if isadmin(request) :
 	    b = UserDetail.objects.get(pk=id)
 	    b.delete()
 	    return HttpResponseRedirect(reverse('portal:adminPage'))
@@ -57,7 +57,7 @@ def showArticleDetails(request,id):
         return HttpResponse("Login as admin to proceed.")
 
 def deleteArticle(request,userid,id):
-    if isadmin(request) or (('inSession' in request.session) and request.session['inSession'] ==False) :
+    if isadmin(request) or (('inSession' in request.session) and request.session['inSession'] ==True) :
 	    b = articlereg.objects.get(pk=id)
 	    b.delete()
 	    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -75,6 +75,18 @@ def activebids(request):
     context = {'active': articlereg.objects.filter(id__in = active_articles)}
     template_name = 'portal/activeArticles.html'
     return render(request, template_name, context)
+
+def recentbids(request):
+    articles = articlereg.objects.all()
+    recent_bids = []
+    now = timezone.now()
+    for a in articles:
+        if now>(a.timestart-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
+            recent_bids.append(a.id)
+    context={'bid':bids.objects.filter(articleid__in = recent_bids)}
+    template_name = 'portal/recentArticles.html'
+    return render(request, template_name, context)
+
 
 
 

@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'ban/(?P<id>\d+)/$', views.banUser, name='ban'),
 	url(r'showArticles/(?P<id>\d+)/$', views.showArticleDetails, name='showArticles'),
 	url(r'activeArticles/$', views.activebids, name='activeArticles'),
+	url(r'recentArticles/$', views.recentbids, name='recentArticles'),
     
 
 

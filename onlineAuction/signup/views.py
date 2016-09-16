@@ -103,7 +103,7 @@ class VisaForm(generic.edit.FormView):
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
             return HttpResponse("Visa Registered.")
         except UserDetail.DoesNotExist:
-            return HttpResponse("you are not login.")
+            return HttpResponse("You are not logged in.")
 
 def Logout(request):
     try:
