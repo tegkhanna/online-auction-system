@@ -26,12 +26,38 @@
 				<th colspan = "3" align="center">{{bid.userid.userName}}</th>
 				<th colspan = "2" align="left">{{bid.highestbid}}</th>
 				</tr>
-				{{form}}
-				<tr><td colspan = "6" align="center"><input type="submit" value="Submit" /></td></tr>
+				<tr>
+				<th><label for="id_highestbid">Highestbid:</label></th>
+				<td>
+				<input id="id_highestbid" name="highestbid" step="any" type="number"
+						onkeypress = "checkHigest({{bid.highestbid}}, this)"
+						onkeyup = "checkHigest({{bid.highestbid}}, this)">
+				</td>
+				</tr>
+				<tr><td colspan = "6" align="center"><input id = "sub" type="submit" value="Submit" /></td></tr>
+				<tr><td id = "msg" colspan = "6" style = "color:red;"></td></tr>
 			</table>
 		
 		</div>
 
 	</form>
 </div>
+
+<script >
+function checkHigest(check , ele)
+{	
+	var btn = document.getElementById("sub");
+	var msg = document.getElementById("msg");
+	if(ele.value < check)
+	{
+		btn.disabled = true;
+		msg.innerHTML = "your bid should be more than higest"
+	}
+	else
+	{
+		btn.disabled = false;
+		msg.innerHTML = ""
+	}
+}
+</script>
 {% endblock %}

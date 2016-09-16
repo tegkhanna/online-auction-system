@@ -16,26 +16,24 @@
     <div  class = "forms">
         <table id = "try">
             <tr>
-                <th>Delete Article</th>
-                <th>Edit Article</th>
-                <th>Article Name</th>
-                <th>Article Status</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Minimum Bid</th>
-                <th>Image</th>
+                <th colspan="2">Delete Article</th>
+                <th colspan="2">Edit Article</th>
+                <th colspan="2">Article Name</th>
+                <th colspan="2">Category</th>
+                <th colspan="4">Description</th>
+                <th colspan="2">Minimum Bid</th>
+                <th colspan="3">Image</th>
 
             </tr>
             {% for item in details %}
             <tr>
-                <td><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
-                <td><a href="EditArticles/{{item.id}}">Edit</a></td>
-                <td>{{ item.articlename}}</td>
-                <td>{{ item.status}}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.desc }}</td>
-                <td>{{ item.minbid}}</td>
-                <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
+                <td colspan="2" align = "center"><a href="showArticles/{{ item.userid }}/deleteArticle/{{item.id}}">Delete</a></td>
+                <td colspan="2"><a href="EditArticles/{{item.id}}">Edit</a></td>
+                <td colspan="2">{{ item.articlename}}</td>
+                <td colspan="2">{{ item.category }}</td>
+                <td colspan="4">{{ item.desc }}</td>
+                <td colspan="2">{{ item.minbid}}</td>
+                <td colspan="3"><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
 
             </tr>
             {% endfor %}

@@ -187,6 +187,8 @@ class Bid(generic.edit.FormView):
     template_name = 'portal/BidArticle.html'
     def get(self, request,a_id, *args, **kwargs):
         quer = UserDetail.objects.get(pk=request.session['userID'])
+        if(quer.visa_set.count() == 0):
+            return HttpResponse("REGISTER UR VISA FIRST")
         context = {'bid': articlereg.objects.get(pk = a_id).bids_set.reverse()[0], 'userName':quer.name, 'form':self.form_class}
         return render(request, self.template_name, context)
     def post(self, request,a_id, *args, **kwargs):
