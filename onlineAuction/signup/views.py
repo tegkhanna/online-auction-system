@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from portal.models import banned_user
+from passlib.hash import pbkdf2_sha256
 # Create your views here.
 from .models import *
 from .forms import *
@@ -32,6 +33,7 @@ class Signup(generic.edit.FormView):
             try:
                 quer=UserDetail.objects.get(userName=new_user.userName)
             except UserDetail.DoesNotExist:
+                new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
@@ -47,12 +49,15 @@ class Signup(generic.edit.FormView):
 class IndexView(generic.TemplateView):
     template_name = 'signup/index.html'
     def get(self, request, *args, **kwargs):
-        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
-            return render(request, self.template_name)
-        elif((request.session['adminSession'] is True)):
-            return HttpResponseRedirect(reverse('portal:adminPage'))
+        if('inSession' in request.session and 'adminSession' in request.session):
+            if  (((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+                return render(request, self.template_name)
+            elif((request.session['adminSession'] is True)):
+                return HttpResponseRedirect(reverse('portal:adminPage'))
+            else:
+                return HttpResponseRedirect(reverse('portal:index'))
         else:
-            return HttpResponseRedirect(reverse('portal:index'))
+            return render(request, self.template_name)
 
 
 
@@ -74,7 +79,7 @@ class LoginForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             m = Admins.objects.get(userName=request.POST['username'])
-            if m.password == request.POST['password']:
+            if pbkdf2_sha256.verify(request.POST['password'],m.password):
                 request.session['inSession'] = False
                 request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:adminPage'))
@@ -84,9 +89,11 @@ class LoginForm(generic.edit.FormView):
             try:
 
                 m = UserDetail.objects.get(userName=request.POST['username'])
+                print(m.password)
                 if banned_user.objects.filter(userid=m.id).exists():
                     return HttpResponse("Your account is banned.")
-                elif m.password == request.POST['password']:
+
+                elif pbkdf2_sha256.verify(request.POST['password'],m.password):
                     request.session['userID'] = m.id
                     request.session['inSession'] = True
                     request.session['adminSession'] = False

@@ -4,17 +4,17 @@
 
 
 <div class = "container">
-	<div id= "header">
-		<h1>WELCOME TO THE ONLINE AUCTION SYSTEM</h1>
-		<h3>PLEASE SIGNUP OR LOGIN</h3>
+	<div id= "header" style="margin-left:20%;">
+		<marquee behaviour="scroll" direction="left" width="70%"><h1>WELCOME TO THE ONLINE AUCTION SYSTEM</h1></marquee>
+		<h2 style="margin-left:20%;">PLEASE SIGNUP OR LOGIN</h2>
 	</div>
 
 	<div class = "forms">
 		<table id = "try">
-			<tr>
-			<th colspan = "2" align="center"><a href="{% url 'signup:signUpPage' %}">SIGUNUP</a></th>
+			<tr >
+			<th class="shake" colspan = "2" align="center"><a href="{% url 'signup:signUpPage' %}">SIGNUP</a></th>
 			<th colspan = "2" align="center"></th>
-			<th colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">LOGIN</a></th>
+			<th class="shake" colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">LOGIN</a></th>
 			</tr>
 		</table>
 	

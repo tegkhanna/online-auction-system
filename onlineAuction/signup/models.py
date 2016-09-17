@@ -6,7 +6,7 @@ class UserDetail(models.Model):
 		return str(self.id)
 	userName=models.CharField(max_length=30)
 	name = models.CharField(max_length=30)
-	password=models.CharField(max_length=30)
+	password=models.CharField(max_length=256)
 	email=models.CharField(max_length=50)
 
 
@@ -23,5 +23,5 @@ class Admins(models.Model):
 		return str(self.id)
 	userName=models.CharField(max_length=30)
 	name = models.CharField(max_length=30)
-	password=models.CharField(max_length=30)
+	password=models.CharField(max_length=256)
 

@@ -63,7 +63,7 @@ function checkHigest(check , ele)
 {	
 	var btn = document.getElementById("sub");
 	var msg = document.getElementById("msg");
-	if(ele.value < check)
+	if(ele.value <= check)
 	{
 		btn.disabled = true;
 		msg.innerHTML = "your bid should be more than higest"

@@ -17,3 +17,4 @@ class Users(admin.ModelAdmin):
     list_display = ('userName', 'email', )
 
 admin.site.register(UserDetail, Users)
+admin.site.register(Admins)
