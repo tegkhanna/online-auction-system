@@ -87,7 +87,7 @@ def recentbids(request):
         recent_bids = []
         now = timezone.now()
         for a in articles:
-            if now>(a.timestart-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
+            if a.timestart<(now-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
                 recent_bids.append(a.id)
         context={'userName':quer.name, 'bid':bids.objects.filter(articleid__in = recent_bids)}
         template_name = 'portal/recentArticles.html'
@@ -118,9 +118,13 @@ class IndexView(generic.TemplateView):
     template_name = 'portal/index.html'
     def get(self, request, *args, **kwargs):
         try:
-            context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
-            return render(request, self.template_name, context)
-        except KeyError:
+            if 'userID' in request.session and request.session['userID']!=None:
+                context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
+                return render(request, self.template_name, context)
+            else:
+                return HttpResponseRedirect(reverse("signup:LoginForm"))
+
+        except UserDetail.DoesNotExist:
             return HttpResponseRedirect(reverse("signup:LoginForm"))
 
    

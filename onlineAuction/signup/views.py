@@ -21,7 +21,7 @@ class Signup(generic.edit.FormView):
             else:
                 return HttpResponseRedirect(reverse('portal:index'))
         except KeyError:
-            pass
+            return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -60,13 +60,17 @@ class LoginForm(generic.edit.FormView):
     form_class = LoginForm
     template_name = 'signup/loginForm.html'
     def get(self, request, *args, **kwargs):
-        form = self.form_class
-        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
-            return render(request, self.template_name, {'form':form})
-        elif((request.session['adminSession'] is True)):
-            return HttpResponseRedirect(reverse('portal:adminPage'))
-        else:
-            return HttpResponseRedirect(reverse('portal:index'))
+        try:
+            form = self.form_class
+            if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+                return render(request, self.template_name, {'form':form})
+            elif((request.session['adminSession'] is True)):
+                return HttpResponseRedirect(reverse('portal:adminPage'))
+            else:
+                return HttpResponseRedirect(reverse('portal:index'))
+        except KeyError:
+            return render(request, self.template_name, {'form': form})
+
     def post(self, request, *args, **kwargs):
         try:
             m = Admins.objects.get(userName=request.POST['username'])
@@ -114,8 +118,10 @@ class VisaForm(generic.edit.FormView):
 
 def Logout(request):
     try:
+        request.session['userID']=None
         request.session['inSession'] = False
         request.session['adminSession'] = False
+
         if 'adminSession' in request.session:
             if request.session['adminSession'] == True or request.session['adminSession'] == None:
                 request.session['adminSession'] = False
