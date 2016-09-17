@@ -85,7 +85,7 @@ def recentbids(request):
         recent_bids = []
         now = timezone.now()
         for a in articles:
-            if now>(a.timestart-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
+            if a.timestart<(now-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
                 recent_bids.append(a.id)
         context={'bid':bids.objects.filter(articleid__in = recent_bids)}
         template_name = 'portal/recentArticles.html'
