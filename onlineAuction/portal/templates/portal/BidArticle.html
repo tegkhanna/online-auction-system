@@ -52,6 +52,7 @@
 </div>
 
 <script >
+onload();
 function checkHigest(check , ele)
 {	
 	var btn = document.getElementById("sub");
@@ -68,6 +69,21 @@ function checkHigest(check , ele)
 	}
 }
 setTimeout(function () { location.reload(true); }, 10000);
+function onload()
+{
+
+	var btn = document.getElementById("sub");
+	var msg = document.getElementById("msg");
+	var ele = document.getElementById("id_highestbid");
+	console.log()
+	if("{{userName}}" == "{{bid.articleid.userid.userName}}")
+	{
+		btn.disabled = true;
+		ele.disabled = true;
+		msg.innerHTML = "You Cannot Bid Your Own Article";
+	}
+
+}
 </script>
 {% endblock %}
 
