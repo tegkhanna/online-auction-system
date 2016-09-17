@@ -5,6 +5,7 @@ from django.views import generic
 from django.utils import timezone
 from portal.models import banned_user
 from passlib.hash import pbkdf2_sha256
+from django.contrib import messages
 # Create your views here.
 from .models import *
 from .forms import *
@@ -38,11 +39,14 @@ class Signup(generic.edit.FormView):
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True
+                messages.success(request,"Successfully registered.Thanks for joining.")
                 return HttpResponseRedirect(reverse('portal:index'))
             else:
-                return HttpResponse("Your username or email exist.")
+                messages.error(request, "The username or email already exists.")
+                return HttpResponseRedirect(reverse('signup:signUpPage'))
         else:
-            return HttpResponse("Your username or email exist.")
+            messages.error(request, "The username or email already exists.")
+            return HttpResponseRedirect(reverse('signup:signUpPage'))
 
 
 
@@ -84,24 +88,29 @@ class LoginForm(generic.edit.FormView):
                 request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:adminPage'))
             else:
-                return HttpResponse("wronggg.")
+                messages.error(request, "Wrong username or password.")
+                return HttpResponseRedirect(reverse('portal:LoginForm'))
         except Admins.DoesNotExist:
             try:
 
                 m = UserDetail.objects.get(userName=request.POST['username'])
                 print(m.password)
                 if banned_user.objects.filter(userid=m.id).exists():
-                    return HttpResponse("Your account is banned.")
+                    messages.error(request, "Your account is banned.")
+                    return HttpResponseRedirect(reverse('portal:LoginForm'))
 
                 elif pbkdf2_sha256.verify(request.POST['password'],m.password):
                     request.session['userID'] = m.id
                     request.session['inSession'] = True
                     request.session['adminSession'] = False
+                    messages.success(request, "WELCOME")
                     return HttpResponseRedirect(reverse('portal:index'))
                 else:
-                    return HttpResponse("wronggg.")
+                    messages.error(request, "Wrong username or password.")
+                    return HttpResponseRedirect(reverse('portal:LoginForm'))
             except UserDetail.DoesNotExist:
-                return HttpResponse("Your username and password didn't match.")
+                messages.error(request, "Wrong username or password.")
+                return HttpResponseRedirect(reverse('portal:LoginForm'))
 
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm
@@ -119,10 +128,12 @@ class VisaForm(generic.edit.FormView):
         try:
             quer = UserDetail.objects.get(pk=request.session['userID'])
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
-            return HttpResponse("Visa Registered.")
-        except UserDetail.DoesNotExist:
-            return HttpResponse("You are not logged in.")
+            messages.success(request, "Visa registered")
+            return HttpResponseRedirect(reverse('portal:index'))
 
+        except UserDetail.DoesNotExist:
+            messages.error(request, "You are not logged in.")
+            return HttpResponseRedirect(reverse('portal:LoginForm'))
 def Logout(request):
     try:
         request.session['userID']=None
@@ -135,4 +146,5 @@ def Logout(request):
         
     except KeyError:
         pass
+    messages.success(request, "You have successfully logged out.")
     return HttpResponseRedirect(reverse('signup:LoginForm'))

@@ -91,8 +91,12 @@ label
 	width:20%;
     font-size: 1.25vw;
 	top : 40%;
-
-}ffg
+	box-shadow: 1px 1px 3px black;
+	transition: box-shadow 0.2s;
+}
+#navigate:hover{
+	box-shadow: 3px 3px 7px black;
+}
 
 #try2
 {
@@ -200,4 +204,24 @@ a.try:active
 #artImg
 {
 	width: 100%;
+}
+@keyframes fadeout {
+	0%{opacity:1;}
+	70%{opacity:1;}
+	100%{opacity:0;}
+}
+#message {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fde073;
+    text-align: center;
+	animation-name: fadeout;
+	animation-duration: 5s;
+    overflow: hidden;
+	opacity:0;
+	box-shadow: 0 0 5px black;
+	transition:opacity 0.5s;
 }

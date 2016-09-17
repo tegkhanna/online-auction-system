@@ -1,8 +1,6 @@
-{% load static %}
+{% extends 'signup/base.html' %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}" />
-
-
+{% block content %}
 <div class = "container">
 	<div id= "header">
 		<h1>LOGIN PAGE</h1>
@@ -21,3 +19,4 @@
 	</form>
 
 </div>
+{% endblock %}

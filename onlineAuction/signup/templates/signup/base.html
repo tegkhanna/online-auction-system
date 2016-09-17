@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}" />
+
+{% if messages %}
+    <div id="message">
+{% for message in messages %}
+   <h3> {{ message }}</h3>
+{% endfor %}
+    </div>
+{% endif %}
+
+{% block content %}
+
+{% endblock %}
