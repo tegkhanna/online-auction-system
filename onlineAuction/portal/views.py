@@ -66,6 +66,7 @@ def deleteArticle(request,userid,id):
 
 def activebids(request):
     if (('inSession' in request.session) and request.session['inSession'] == True):
+        quer = UserDetail.objects.get(pk=request.session['userID'])
         articles=articlereg.objects.all()
         active_articles=[]
         now = timezone.now()
@@ -73,7 +74,7 @@ def activebids(request):
             endtime=a.timestart+timedelta(hours=1)
             if now>=a.timestart and now <endtime:
                 active_articles.append(a.id)
-        context = {'active': articlereg.objects.filter(id__in = active_articles)}
+        context = {'userName':quer.name,'active': articlereg.objects.filter(id__in = active_articles)}
         template_name = 'portal/activeArticles.html'
         return render(request, template_name, context)
     else:
@@ -81,13 +82,14 @@ def activebids(request):
 
 def recentbids(request):
     if (('inSession' in request.session) and request.session['inSession'] == True):
+        quer = UserDetail.objects.get(pk=request.session['userID'])
         articles = articlereg.objects.all()
         recent_bids = []
         now = timezone.now()
         for a in articles:
             if now>(a.timestart-timedelta(hours=1)) and a.timestart>(now-timedelta(days=1,hours=1)):
                 recent_bids.append(a.id)
-        context={'bid':bids.objects.filter(articleid__in = recent_bids)}
+        context={'userName':quer.name, 'bid':bids.objects.filter(articleid__in = recent_bids)}
         template_name = 'portal/recentArticles.html'
         return render(request, template_name, context)
     else:
@@ -137,9 +139,9 @@ class RegForm(generic.edit.FormView):
             now = datetime.now()
             deltaNow = timedelta(days = int(now.day),hours = int(now.hour),minutes = int(now.minute),seconds = int(now.second))
             delta = timedelta(days = int(time.day),hours = int(time.hour),minutes = int(time.minute),seconds = int(time.second))
-            timedif = (deltaNow - delta).seconds
-            stat = None
-            if(timedif < 0):
+            timedif = (delta - deltaNow).seconds
+            deltaHour = timedelta(seconds = 3600)
+            if(delta  < deltaNow - deltaHour):
                 return HttpResponse("ENTER CORRECT DATE TIME")
             art=quer.articlereg_set.create(
                                         timestart=request.POST['timestart'],articlename=request.POST['articlename'],
@@ -182,8 +184,9 @@ class EditArticle(generic.edit.FormView):
             now = datetime.now()
             deltaNow = timedelta(days = int(now.day),hours = int(now.hour),minutes = int(now.minute),seconds = int(now.second))
             delta = timedelta(days = int(time.day),hours = int(time.hour),minutes = int(time.minute),seconds = int(time.second))
-            timedif = (deltaNow - delta).seconds
-            if(timedif < 0):
+            deltaHour = timedelta(seconds = 3600)
+            timedif = (delta - deltaNow).seconds
+            if(delta  < deltaNow - deltaHour):
                 return HttpResponse("ENTER CORRECT DATE TIME")
             img.save()
             art.save()
@@ -207,7 +210,7 @@ class Bid(generic.edit.FormView):
         quer = UserDetail.objects.get(pk=request.session['userID'])
         if(quer.visa_set.count() == 0):
             return HttpResponseRedirect(reverse("signup:VisaForm"))
-        context = {'bid': articlereg.objects.get(pk = a_id).bids_set.reverse()[0], 'userName':quer.name, 'form':self.form_class}
+        context = {'bid': articlereg.objects.get(pk = a_id).bids_set.reverse()[0], 'userName':quer.name,'quer':quer, 'form':self.form_class}
         return render(request, self.template_name, context)
     def post(self, request,a_id, *args, **kwargs):
         bid = articlereg.objects.get(pk = a_id).bids_set.reverse()[0]

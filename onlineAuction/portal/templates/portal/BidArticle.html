@@ -22,18 +22,23 @@
 			<table id = "try">
 				
 				<tr>
-				<td colspan = "6" >
-				<img id = "artImg" src="{% static 'portal/article_images/'%}{{bid.articleid.articleimage_set.reverse.0}}" alt="Image">
-				</td>
+					<td colspan = "6" >
+					<img id = "artImg" src="{% static 'portal/article_images/'%}{{bid.articleid.articleimage_set.reverse.0}}" alt="Image">
+					</td>
 				</tr>
-                <tr><th colspan = "3">Article Name</th>
-                <th colspan = "3">{{ bid.articleid.articlename }}</th>
+                <tr>
+	                <th colspan = "3">Article Name</th>
+	                <th colspan = "3">{{ bid.articleid.articlename }}</th>
                 </tr>
 				<tr>
-				<th colspan = "1" align="left">HIGHEST</th>
-				<th colspan = "3" align="center">{{bid.userid.userName}}</th>
-				<th colspan = "2" align="left">{{bid.highestbid}}</th>
+					<th colspan = "1" align="left">HIGHEST</th>
+					<th colspan = "3" align="center">{{bid.userid.userName}}</th>
+					<th colspan = "2" align="left">{{bid.highestbid}}</th>
 				</tr>
+				<tr>
+	                <th colspan = "3">TIME REMAINING</th>
+	                <th colspan = "3" id = "time"></th>
+                </tr>
 				<tr>
 				<th><label for="id_highestbid">Highestbid:</label></th>
 				<td>
@@ -53,6 +58,7 @@
 
 <script >
 onload();
+
 function checkHigest(check , ele)
 {	
 	var btn = document.getElementById("sub");
@@ -71,18 +77,46 @@ function checkHigest(check , ele)
 setTimeout(function () { location.reload(true); }, 10000);
 function onload()
 {
-
+	setInterval(timeCalc, 500);
 	var btn = document.getElementById("sub");
 	var msg = document.getElementById("msg");
 	var ele = document.getElementById("id_highestbid");
 	console.log()
-	if("{{userName}}" == "{{bid.articleid.userid.userName}}")
+	if("{{quer.userName}}" == "{{bid.articleid.userid.userName}}")
 	{
 		btn.disabled = true;
 		ele.disabled = true;
 		msg.innerHTML = "You Cannot Bid Your Own Article";
 	}
 
+}
+function timeCalc()
+{
+	var timeShow = document.getElementById("time");
+	var x = parseInt("{{bid.articleid.timestart}}"[18]) * 10;
+	var y = parseInt("{{bid.articleid.timestart}}"[19]);
+	artTime = x+y;
+	artTimeSec = 00;
+	var currentdate = new Date();
+	var min = currentdate.getMinutes();
+	var sec = currentdate.getSeconds();
+	var minGap = min - artTime;
+	var secGap = sec - artTimeSec;
+
+	if(minGap < 0)
+	{	minGap+=60;}
+	if(secGap < 0)
+	{	secGap+=60;}
+	timeRemainMin = 59 - minGap;
+	timeRemainSec = 59 - secGap;
+	if(timeRemainSec < 10)
+	{
+		timeShow.innerHTML = timeRemainMin + ":0" + timeRemainSec;
+	}
+	else
+	{
+		timeShow.innerHTML = timeRemainMin + ":" + timeRemainSec;
+	}
 }
 </script>
 {% endblock %}
