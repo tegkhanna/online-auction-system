@@ -9,7 +9,7 @@ class RegForm(forms.Form):#user form pre build class
              ('Electronics','Electronics'),('Others','Others'))
     category=forms.ChoiceField(choices=Choices)
     desc=forms.CharField(max_length=150)
-    minbid=forms.FloatField()
+    minbid=forms.FloatField(min_value=0)
     image=forms.ImageField()
 
 class EditRegForm(forms.Form):#user form pre build class
@@ -19,8 +19,8 @@ class EditRegForm(forms.Form):#user form pre build class
              ('Electronics','Electronics'),('Others','Others'))
     category=forms.ChoiceField(choices=Choices)
     desc=forms.CharField(max_length=150)
-    minbid=forms.FloatField()
+    minbid=forms.FloatField(min_value=0)
     image=forms.ImageField()
 
 class BidPrice(forms.Form):
-     highestbid = forms.FloatField()
+     highestbid = forms.FloatField(min_value=0.0)
