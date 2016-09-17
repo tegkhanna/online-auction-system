@@ -114,8 +114,10 @@ class VisaForm(generic.edit.FormView):
 
 def Logout(request):
     try:
+        request.session['userID']=None
         request.session['inSession'] = False
         request.session['adminSession'] = False
+
         if 'adminSession' in request.session:
             if request.session['adminSession'] == True or request.session['adminSession'] == None:
                 request.session['adminSession'] = False
