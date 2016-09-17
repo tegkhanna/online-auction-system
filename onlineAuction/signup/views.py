@@ -12,13 +12,17 @@ class Signup(generic.edit.FormView):
     form_class  = UserForm
     template_name = 'signup/SignUpForm.html'
     def get(self, request, *args, **kwargs):
-        form = self.form_class
-        if(('inSession' in request.session)==False and ('adminSession' in request.session)==False):
-            return render(request, self.template_name, {'form':form})
-        elif((request.session['adminSession'] is True)):
-            return HttpResponseRedirect(reverse('portal:adminPage'))
-        else:
-            return HttpResponseRedirect(reverse('portal:index'))
+        try:
+            form = self.form_class
+            if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+                return render(request, self.template_name, {'form':form})
+            elif((request.session['adminSession'] is True)):
+                return HttpResponseRedirect(reverse('portal:adminPage'))
+            else:
+                return HttpResponseRedirect(reverse('portal:index'))
+        except KeyError:
+            pass
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         new_user = form.save(commit=False)
