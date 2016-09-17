@@ -11,11 +11,14 @@
 	<form method="post">
 		{% csrf_token %}
 		<div class = "forms">
+		{% if isReg is 0 %}
 			<table id = "try">
 				{{form}}
 				<tr><td colspan = "2" align="center"><input type="submit" value="Submit" /></td></tr>
 			</table>
-		
+		{% else %}
+			<p>VISA REGISTERED ALREADY</p>
+		{% endif %}
 		</div>
 
 	</form>

@@ -93,9 +93,9 @@ class VisaForm(generic.edit.FormView):
         form = self.form_class
         quer = UserDetail.objects.get(pk=request.session['userID'])
         if(quer.visa_set.count()==0):
-            return render(request, self.template_name, {'form':form, 'userName':quer.name})
+            return render(request, self.template_name, {'form':form, 'userName':quer.name, 'isReg':0})
         else:
-            return HttpResponse("already registered.")
+            return render(request, self.template_name, {'form':form, 'userName':quer.name, 'isReg':1})
 
     def post(self, request, *args, **kwargs):
         try:
