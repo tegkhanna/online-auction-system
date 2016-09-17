@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-
+from portal.models import banned_user
 # Create your views here.
 from .models import *
 from .forms import *
@@ -13,7 +13,7 @@ class Signup(generic.edit.FormView):
     template_name = 'signup/SignUpForm.html'
     def get(self, request, *args, **kwargs):
         form = self.form_class
-        if(((request.session['inSession'] is False) or (request.session['inSession'] is None)) and ((request.session['adminSession'] is False))):
+        if(('inSession' in request.session)==False and ('adminSession' in request.session)==False):
             return render(request, self.template_name, {'form':form})
         elif((request.session['adminSession'] is True)):
             return HttpResponseRedirect(reverse('portal:adminPage'))
@@ -74,8 +74,11 @@ class LoginForm(generic.edit.FormView):
                 return HttpResponse("wronggg.")
         except Admins.DoesNotExist:
             try:
+
                 m = UserDetail.objects.get(userName=request.POST['username'])
-                if m.password == request.POST['password']:
+                if banned_user.objects.filter(userid=m.id).exists():
+                    return HttpResponse("Your account is banned.")
+                elif m.password == request.POST['password']:
                     request.session['userID'] = m.id
                     request.session['inSession'] = True
                     request.session['adminSession'] = False
