@@ -89,15 +89,14 @@ class LoginForm(generic.edit.FormView):
                 return HttpResponseRedirect(reverse('portal:adminPage'))
             else:
                 messages.error(request, "Wrong username or password.")
-                return HttpResponseRedirect(reverse('portal:LoginForm'))
+                return HttpResponseRedirect(reverse('signup:LoginForm'))
         except Admins.DoesNotExist:
             try:
 
                 m = UserDetail.objects.get(userName=request.POST['username'])
-                print(m.password)
                 if banned_user.objects.filter(userid=m.id).exists():
                     messages.error(request, "Your account is banned.")
-                    return HttpResponseRedirect(reverse('portal:LoginForm'))
+                    return HttpResponseRedirect(reverse('signup:LoginForm'))
 
                 elif pbkdf2_sha256.verify(request.POST['password'],m.password):
                     request.session['userID'] = m.id
@@ -107,10 +106,13 @@ class LoginForm(generic.edit.FormView):
                     return HttpResponseRedirect(reverse('portal:index'))
                 else:
                     messages.error(request, "Wrong username or password.")
-                    return HttpResponseRedirect(reverse('portal:LoginForm'))
+                    return HttpResponseRedirect(reverse('signup:LoginForm'))
             except UserDetail.DoesNotExist:
                 messages.error(request, "Wrong username or password.")
-                return HttpResponseRedirect(reverse('portal:LoginForm'))
+                return HttpResponseRedirect(reverse('signup:LoginForm'))
+
+
+
 
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm

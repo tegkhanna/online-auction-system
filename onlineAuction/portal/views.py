@@ -8,8 +8,8 @@ from django.utils import timezone, dateparse
 from datetime import datetime, timedelta
 from signup.models import UserDetail
 from portal.models import articlereg
-
 from portal.models import banned_user
+from django.contrib import messages
 
 
 def isadmin(request):
@@ -31,7 +31,8 @@ class AdminIndexView(generic.TemplateView):
                 context = {'details': UserDetail.objects.all()}
                 return render(request, self.template_name, context)
             else:
-                return HttpResponse("Login as admin to proceed.")
+                messages.error(request,"You are not authorised.")
+                return HttpResponseRedirect(reverse('portal:index'))
         except:
             pass
 
@@ -39,9 +40,11 @@ class AdminIndexView(generic.TemplateView):
         if isadmin(request):
             b = UserDetail.objects.get(pk=id)
             b.delete()
+            messages.success(request, "User deleted successfully")
             return HttpResponseRedirect(reverse('portal:adminPage'))
         else:
-            return HttpResponse("Login as admin to proceed.")
+            messages.error(request, "You are not authorised.")
+            return HttpResponseRedirect(reverse('portal:index'))
 
     def banUser(request, id):
         if isadmin(request):
@@ -50,9 +53,11 @@ class AdminIndexView(generic.TemplateView):
             else:
                 ob = banned_user(userid=id)
                 ob.save()
+                messages.success(request, "User banned")
             return HttpResponseRedirect(reverse('portal:adminPage'))
         else:
-            return HttpResponse("Login as admin to proceed.")
+            messages.error(request, "You are not authorised.")
+            return HttpResponseRedirect(reverse('portal:index'))
 
 class ArticleView(generic.TemplateView):
     template_name = 'portal/adminPageShowArticles.html'
@@ -71,9 +76,11 @@ class ArticleView(generic.TemplateView):
         if isadmin(request) or (('inSession' in request.session) and request.session['inSession'] == True):
             b = articlereg.objects.get(pk=id)
             b.delete()
+            messages.success(request, "Article deleted")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            return HttpResponse("Login as admin to proceed.")
+            messages.error(request, "You are not authorised.")
+            return HttpResponseRedirect(reverse('portal:index'))
 
 
 
@@ -95,7 +102,8 @@ class ActiveBidView(generic.TemplateView):
                 template_name = 'portal/activeArticles.html'
                 return render(request, template_name, context)
             else:
-                return HttpResponse("Login as user to proceed.")
+                messages.error(request, "Login or signup to proceed.")
+                return HttpResponseRedirect(reverse('portal:index'))
         except:
             pass
 
@@ -118,7 +126,8 @@ class RecentBidView(generic.TemplateView):
                 template_name = 'portal/recentArticles.html'
                 return render(request, template_name, context)
             else:
-                return HttpResponse("Login as user to proceed.")
+                messages.error(request, "Login or signup to proceed.")
+                return HttpResponseRedirect(reverse('portal:index'))
         except:
             pass
 
@@ -161,7 +170,8 @@ class RegForm(generic.edit.FormView):
             timedif = (delta - deltaNow).seconds
             deltaHour = timedelta(seconds=3600)
             if (delta < deltaNow - deltaHour):
-                return HttpResponse("ENTER CORRECT DATE TIME")
+                messages.error(request, "Enter correct date time.")
+                return HttpResponseRedirect(reverse("portal:RegForm"))
             art = quer.articlereg_set.create(
                 timestart=request.POST['timestart'], articlename=request.POST['articlename'],
                 category=request.POST['category'], desc=request.POST['desc'],
@@ -169,9 +179,11 @@ class RegForm(generic.edit.FormView):
             art.articleimage_set.create(image=request.FILES['image'])
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
+            messages.success(request, "Article registered.")
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
-            return HttpResponse("Article NOT Registered.")
+            messages.error(request, "You are not authorised.")
+            return HttpResponseRedirect(reverse("portal:index"))
 
 
 class EditArticle(generic.edit.FormView):
@@ -212,13 +224,16 @@ class EditArticle(generic.edit.FormView):
             deltaHour = timedelta(seconds=3600)
             timedif = (delta - deltaNow).seconds
             if (delta < deltaNow - deltaHour):
-                return HttpResponse("ENTER CORRECT DATE TIME")
+                messages.error(request, "Enter correct date time.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             img.save()
             art.save()
             art.bids_set.reverse()[0].highestbid = art.minbid
+            messages.success(request, "Article registered.")
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
-            return HttpResponse("Article NOT Registered.")
+            messages.error(request, "You are not authorised.")
+            return HttpResponseRedirect(reverse("portal:index"))
 
 
 class UserShowArticles(generic.TemplateView):
