@@ -83,13 +83,13 @@ class LoginForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             m = Admins.objects.get(userName=request.POST['username'])
-            if pbkdf2_sha256.verify(request.POST['password'],m.password):
+            if (request.POST['password'] == m.password):
                 request.session['inSession'] = False
                 request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:adminPage'))
             else:
                 messages.error(request, "Wrong username or password.")
-                return HttpResponseRedirect(reverse('portal:LoginForm'))
+                return HttpResponseRedirect(reverse('signup:LoginForm'))
         except Admins.DoesNotExist:
             try:
 
@@ -97,7 +97,7 @@ class LoginForm(generic.edit.FormView):
                 print(m.password)
                 if banned_user.objects.filter(userid=m.id).exists():
                     messages.error(request, "Your account is banned.")
-                    return HttpResponseRedirect(reverse('portal:LoginForm'))
+                    return HttpResponseRedirect(reverse('signup:LoginForm'))
 
                 elif pbkdf2_sha256.verify(request.POST['password'],m.password):
                     request.session['userID'] = m.id
@@ -107,10 +107,10 @@ class LoginForm(generic.edit.FormView):
                     return HttpResponseRedirect(reverse('portal:index'))
                 else:
                     messages.error(request, "Wrong username or password.")
-                    return HttpResponseRedirect(reverse('portal:LoginForm'))
+                    return HttpResponseRedirect(reverse('signup:LoginForm'))
             except UserDetail.DoesNotExist:
                 messages.error(request, "Wrong username or password.")
-                return HttpResponseRedirect(reverse('portal:LoginForm'))
+                return HttpResponseRedirect(reverse('signup:LoginForm'))
 
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm
@@ -132,7 +132,7 @@ class VisaForm(generic.edit.FormView):
             return HttpResponseRedirect(reverse('portal:index'))
         except UserDetail.DoesNotExist:
             messages.error(request, "You are not logged in.")
-            return HttpResponseRedirect(reverse('portal:LoginForm'))
+            return HttpResponseRedirect(reverse('signup:LoginForm'))
 def Logout(request):
     try:
         request.session['userID']=None

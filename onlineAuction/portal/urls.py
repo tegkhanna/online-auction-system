@@ -22,4 +22,8 @@ urlpatterns = [
     url(r'^UserShowArticle/$', views.UserShowArticles.as_view(), name='userArticles'),
     url(r'^UserShowArticle/EditArticles/(?P<a_id>\d+)/$', views.EditArticle.as_view(), name='editArticles'),
     url(r'^activeArticles/BidPage/(?P<a_id>\d+)/$', views.Bid.as_view(), name='Bid'),
+    url(r'^activeArticles/BidPage/SoldPage/(?P<a_id>\d+)/$', views.Bid.sold, name='Bid'),
+    url(r'^SoldBids/$', views.BidsSoldView.as_view(), name='soldArticles'),
+    url(r'^WonBids/$', views.BidsWonView.as_view(), name='wonArticles'),
+
 ]

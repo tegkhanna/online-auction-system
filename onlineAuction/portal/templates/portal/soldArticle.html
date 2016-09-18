@@ -1,0 +1,41 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
+{% block content %}
+
+<div class = "container">
+    <div id= "header">
+        <h1>SOLD ARTICLES</h1>
+    </div>
+<div  id="tablearticle">
+<table>
+    <tr>
+
+        <th>Article Name</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Highest Bid</th>
+        <th>Image</th>
+        <th>Bid Winner</th>
+
+    </tr>
+{% for bid in bid %}
+
+    <tr>
+
+        <td>{{bid.articleid.articlename}}</td>
+        <td>{{ bid.articleid.category }}</td>
+        <td>{{ bid.articleid.desc }}</td>
+        <td>{{ bid.highestbid}}</td>
+        <td><img src="{% static 'portal/article_images/'%}{{bid.articleid.articleimage_set.reverse.0}}" alt="Image"></td>
+        <td>{{ bid.userid.userName }}</td>
+
+     </tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
+
+

@@ -10,7 +10,7 @@ from signup.models import UserDetail
 from portal.models import articlereg
 
 from portal.models import banned_user
-
+from .forms import *
 
 def isadmin(request):
     if 'adminSession' in request.session:
@@ -92,8 +92,7 @@ class ActiveBidView(generic.TemplateView):
                     if now >= a.timestart and now < endtime:
                         active_articles.append(a.id)
                 context = {'userName': quer.name, 'active': articlereg.objects.filter(id__in=active_articles)}
-                template_name = 'portal/activeArticles.html'
-                return render(request, template_name, context)
+                return render(request, self.template_name, context)
             else:
                 return HttpResponse("Login as user to proceed.")
         except:
@@ -102,7 +101,7 @@ class ActiveBidView(generic.TemplateView):
 
 
 class RecentBidView(generic.TemplateView):
-    template_name = 'portal/activeArticles.html'
+    template_name = 'portal/recentArticles.html'
 
     def get(self, request, *args, **kwargs):
         try:
@@ -114,16 +113,39 @@ class RecentBidView(generic.TemplateView):
                 for a in articles:
                     if a.timestart < (now - timedelta(hours=1)) and a.timestart > (now - timedelta(days=1, hours=1)):
                         recent_bids.append(a.id)
+                        a.status = "sold"
+                        a.save()
                 context = {'userName': quer.name, 'bid': bids.objects.filter(articleid__in=recent_bids)}
-                template_name = 'portal/recentArticles.html'
-                return render(request, template_name, context)
+                return render(request, self.template_name, context)
             else:
                 return HttpResponse("Login as user to proceed.")
         except:
             pass
 
 
-from .forms import *
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class IndexView(generic.TemplateView):
@@ -151,6 +173,7 @@ class RegForm(generic.edit.FormView):
 
     def post(self, request, *args, **kwargs):
         try:
+            stat = None;
             quer = UserDetail.objects.get(pk=request.session['userID'])
             time = dateparse.parse_datetime(request.POST['timestart'])
             now = datetime.now()
@@ -162,10 +185,15 @@ class RegForm(generic.edit.FormView):
             deltaHour = timedelta(seconds=3600)
             if (delta < deltaNow - deltaHour):
                 return HttpResponse("ENTER CORRECT DATE TIME")
+
+            if(delta > deltaNow):
+                stat = "inactive"
+            elif(delta > deltaNow - deltaHour):
+                stat = "active"
             art = quer.articlereg_set.create(
                 timestart=request.POST['timestart'], articlename=request.POST['articlename'],
                 category=request.POST['category'], desc=request.POST['desc'],
-                minbid=request.POST['minbid'])
+                minbid=request.POST['minbid'], status = stat)
             art.articleimage_set.create(image=request.FILES['image'])
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
@@ -193,6 +221,7 @@ class EditArticle(generic.edit.FormView):
 
     def post(self, request, a_id, *args, **kwargs):
         try:
+            stat = None
             quer = UserDetail.objects.get(pk=request.session['userID'])
             art = quer.articlereg_set.get(pk=int(a_id))
             art.timestart = request.POST['timestart']
@@ -213,6 +242,13 @@ class EditArticle(generic.edit.FormView):
             timedif = (delta - deltaNow).seconds
             if (delta < deltaNow - deltaHour):
                 return HttpResponse("ENTER CORRECT DATE TIME")
+            
+            if(delta > deltaNow):
+                stat = "inactive"
+            elif(delta > deltaNow - deltaHour):
+                stat = "active"
+            art.status = stat
+
             img.save()
             art.save()
             art.bids_set.reverse()[0].highestbid = art.minbid
@@ -251,5 +287,58 @@ class Bid(generic.edit.FormView):
             return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
         else:
             pass
+    def sold(request, a_id):
+        article = articlereg.objects.get(pk = a_id)
+        article.status = "sold"
+        article.save()
+        return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
 
 
+
+class BidsSoldView(generic.TemplateView):
+    template_name = 'portal/soldArticle.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            quer = UserDetail.objects.get(pk=request.session['userID'])
+            articles = quer.articlereg_set.all()
+            now = timezone.now()
+            if (('inSession' in request.session) and request.session['inSession'] == True):
+                sold_bids = []
+                for a in articles:
+                    if a.timestart < (now - timedelta(hours=1)) and a.timestart > (now - timedelta(days=1, hours=1)):
+                        if(a.bids_set.reverse()[0].highestbid != a.minbid):
+                            sold_bids.append(a.id)
+                        a.status = "sold"
+                        a.save()
+                context = {'userName': quer.name, 'bid': bids.objects.filter(articleid__in=sold_bids)}
+                return render(request, self.template_name, context)
+            else:
+                return HttpResponse("Login as user to proceed.")
+        except UserDetail.DoesNotExist:
+            pass
+
+
+
+class BidsWonView(generic.TemplateView):
+    template_name = 'portal/wonArticle.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            quer = UserDetail.objects.get(pk=request.session['userID'])
+            articles = articlereg.objects.all()
+            now = timezone.now()
+            if (('inSession' in request.session) and request.session['inSession'] == True):
+                won_bids = []
+                for a in articles:
+                    if a.timestart < (now - timedelta(hours=1)) and a.timestart > (now - timedelta(days=1, hours=1)):
+                        if(a.bids_set.reverse()[0].highestbid != a.minbid and a.bids_set.reverse()[0].userid == quer):
+                            won_bids.append(a.id)
+                        a.status = "sold"
+                        a.save()
+                context = {'userName': quer.name, 'bid': bids.objects.filter(articleid__in=won_bids)}
+                return render(request, self.template_name, context)
+            else:
+                return HttpResponse("Login as user to proceed.")
+        except UserDetail.DoesNotExist:
+            pass
