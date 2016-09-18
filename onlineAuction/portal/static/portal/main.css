@@ -226,3 +226,31 @@ a.try:active
 	box-shadow: 0 0 5px black;
 	transition:opacity 0.5s;
 }
+
+#artImg{
+	box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+
+}
+#try input{margin:10px;
+padding:10px;
+cursor:default;
+border-radius:20px;
+font-size:1vw;
+box-shadow: 0px 0px 0px red;
+text-shadow: 1px 1px 2px black;
+transition:box-shadow 0.8s;}
+input:focus {outline:0;
+
+text-shadow: 1px 1px 2px red;
+box-shadow: 4px 4px 20px grey;
+}
+#try input:hover{
+	box-shadow: 4px 4px 20px black;
+}
+#try input:active{
+		box-shadow: 4px 4px 20px red;}
+
+#try label
+{	font-size:1vw;
+	color:black;
+}

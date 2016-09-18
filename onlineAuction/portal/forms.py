@@ -2,8 +2,8 @@ from django import forms
 from .models import *
 
 class RegForm(forms.Form):#user form pre build class
-    
-    timestart=forms.DateTimeField(widget=forms.widgets.DateTimeInput)
+
+    timestart=forms.DateTimeField(widget=forms.widgets.DateTimeInput(attrs={'placeholder':'YYYY-MM-DD HH:MM:SS'}))
     articlename=forms.CharField(max_length=40)
     Choices=(('Book','Book'),('Vehicle','Vehicle'),('Coin or Stamp','Coin or Stamp'),('Antique','Antique'),
              ('Electronics','Electronics'),('Others','Others'))
@@ -11,6 +11,7 @@ class RegForm(forms.Form):#user form pre build class
     desc=forms.CharField(max_length=150)
     minbid=forms.FloatField(min_value=0)
     image=forms.ImageField()
+
 
 class EditRegForm(forms.Form):#user form pre build class
     timestart=forms.DateTimeField(widget=forms.widgets.DateTimeInput)

@@ -75,9 +75,13 @@ class ArticleView(generic.TemplateView):
     def deleteArticle(request, userid, id):
         if isadmin(request) or (('inSession' in request.session) and request.session['inSession'] == True):
             b = articlereg.objects.get(pk=id)
-            b.delete()
-            messages.success(request, "Article deleted")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if isadmin(request)==False and (b.timestart<timezone.now()):
+                messages.error(request, "Ended or active bids cannot be deleted")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                b.delete()
+                messages.success(request, "Article deleted")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.error(request, "You are not authorised.")
             return HttpResponseRedirect(reverse('portal:index'))
@@ -161,12 +165,21 @@ class RegForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             quer = UserDetail.objects.get(pk=request.session['userID'])
-            time = dateparse.parse_datetime(request.POST['timestart'])
+            try:
+                time = dateparse.parse_datetime(request.POST['timestart'])
+            except ValueError:
+                messages.error(request,"Enter correct date time values")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             now = datetime.now()
             deltaNow = timedelta(days=int(now.day), hours=int(now.hour), minutes=int(now.minute),
                                  seconds=int(now.second))
-            delta = timedelta(days=int(time.day), hours=int(time.hour), minutes=int(time.minute),
+            try:
+                delta = timedelta(days=int(time.day), hours=int(time.hour), minutes=int(time.minute),
                               seconds=int(time.second))
+            except AttributeError:
+                messages.error(request, "Enter correct date time values")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             timedif = (delta - deltaNow).seconds
             deltaHour = timedelta(seconds=3600)
             if (delta < deltaNow - deltaHour):
@@ -192,16 +205,20 @@ class EditArticle(generic.edit.FormView):
 
     def get(self, request, a_id, *args, **kwargs):
         data = articlereg.objects.get(pk=int(a_id))
-        form = self.form_class(initial={'timestart': data.timestart,
+        if data.timestart<timezone.now():
+            messages.error(request,"Active or ended bids cannot be edited.")
+            return HttpResponseRedirect(reverse('portal:userArticles'))
+        else:
+            form = self.form_class(initial={'timestart': data.timestart,
                                         'articlename': data.articlename,
                                         'category': data.category,
                                         'desc': data.desc,
                                         'minbid': data.minbid,
                                         })
 
-        context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name,
+            context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name,
                    'form': form}
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context)
 
     def post(self, request, a_id, *args, **kwargs):
         try:
@@ -215,12 +232,20 @@ class EditArticle(generic.edit.FormView):
             img = art.articleimage_set.reverse()[0]
             img.image = request.FILES['image']
             # time check
-            time = dateparse.parse_datetime(request.POST['timestart'])
+            try:
+                time = dateparse.parse_datetime(request.POST['timestart'])
+            except ValueError:
+                messages.error(request,"Enter correct date time values")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             now = datetime.now()
             deltaNow = timedelta(days=int(now.day), hours=int(now.hour), minutes=int(now.minute),
                                  seconds=int(now.second))
-            delta = timedelta(days=int(time.day), hours=int(time.hour), minutes=int(time.minute),
+            try:
+                delta = timedelta(days=int(time.day), hours=int(time.hour), minutes=int(time.minute),
                               seconds=int(time.second))
+            except AttributeError:
+                messages.error(request, "Enter correct date time values")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             deltaHour = timedelta(seconds=3600)
             timedif = (delta - deltaNow).seconds
             if (delta < deltaNow - deltaHour):
@@ -250,12 +275,16 @@ class Bid(generic.edit.FormView):
     template_name = 'portal/BidArticle.html'
 
     def get(self, request, a_id, *args, **kwargs):
-        quer = UserDetail.objects.get(pk=request.session['userID'])
-        if (quer.visa_set.count() == 0):
-            return HttpResponseRedirect(reverse("signup:VisaForm"))
-        context = {'bid': articlereg.objects.get(pk=a_id).bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
+        if articlereg.objects.filter(pk=a_id).exists()==False:
+            messages.error(request,"Article not found")
+            return HttpResponseRedirect(reverse("portal:index"))
+        else:
+            quer = UserDetail.objects.get(pk=request.session['userID'])
+            if (quer.visa_set.count() == 0):
+                return HttpResponseRedirect(reverse("signup:VisaForm"))
+            context = {'bid': articlereg.objects.get(pk=a_id).bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
                    'form': self.form_class}
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context)
 
     def post(self, request, a_id, *args, **kwargs):
         bid = articlereg.objects.get(pk=a_id).bids_set.reverse()[0]
