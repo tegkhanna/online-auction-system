@@ -132,7 +132,6 @@ class VisaForm(generic.edit.FormView):
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
             messages.success(request, "Visa registered")
             return HttpResponseRedirect(reverse('portal:index'))
-
         except UserDetail.DoesNotExist:
             messages.error(request, "You are not logged in.")
             return HttpResponseRedirect(reverse('portal:LoginForm'))
