@@ -206,8 +206,9 @@ a.try:active
 	width: 100%;
 }
 @keyframes fadeout {
-	0%{opacity:1;}
-	70%{opacity:1;}
+	0%{opacity:0;}
+    20%{opacity:1;}
+	80%{opacity:1;}
 	100%{opacity:0;}
 }
 #message {

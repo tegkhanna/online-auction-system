@@ -94,7 +94,6 @@ class LoginForm(generic.edit.FormView):
             try:
 
                 m = UserDetail.objects.get(userName=request.POST['username'])
-                print(m.password)
                 if banned_user.objects.filter(userid=m.id).exists():
                     messages.error(request, "Your account is banned.")
                     return HttpResponseRedirect(reverse('signup:LoginForm'))
@@ -111,6 +110,7 @@ class LoginForm(generic.edit.FormView):
             except UserDetail.DoesNotExist:
                 messages.error(request, "Wrong username or password.")
                 return HttpResponseRedirect(reverse('signup:LoginForm'))
+
 
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm
