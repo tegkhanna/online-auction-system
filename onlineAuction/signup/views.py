@@ -83,7 +83,7 @@ class LoginForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             m = Admins.objects.get(userName=request.POST['username'])
-            if (request.POST['password'] == m.password):
+            if pbkdf2_sha256.verify(request.POST['password'],m.password):
                 request.session['inSession'] = False
                 request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:adminPage'))
