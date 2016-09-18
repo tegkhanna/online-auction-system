@@ -83,7 +83,7 @@ class LoginForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             m = Admins.objects.get(userName=request.POST['username'])
-            if pbkdf2_sha256.verify(request.POST['password'],m.password):
+            if (request.POST['password'] == m.password):
                 request.session['inSession'] = False
                 request.session['adminSession'] = True
                 return HttpResponseRedirect(reverse('portal:adminPage'))
@@ -112,8 +112,6 @@ class LoginForm(generic.edit.FormView):
                 return HttpResponseRedirect(reverse('signup:LoginForm'))
 
 
-
-
 class VisaForm(generic.edit.FormView):
     form_class  = VisaForm
     template_name = 'signup/visa.html'
@@ -134,7 +132,7 @@ class VisaForm(generic.edit.FormView):
             return HttpResponseRedirect(reverse('portal:index'))
         except UserDetail.DoesNotExist:
             messages.error(request, "You are not logged in.")
-            return HttpResponseRedirect(reverse('portal:LoginForm'))
+            return HttpResponseRedirect(reverse('signup:LoginForm'))
 def Logout(request):
     try:
         request.session['userID']=None

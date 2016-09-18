@@ -18,9 +18,11 @@ class articlereg(models.Model):
     userid=models.ForeignKey(userdetails.UserDetail)
     timestart=models.DateTimeField()
     articlename=models.CharField(max_length=40)
+    status = models.CharField(max_length = 20 , default= "inactive")
     category=models.CharField(max_length=40)
     desc=models.CharField(max_length=150)
     minbid=models.FloatField(default=0.0)
+    
 
 class articleimage(models.Model):
     def __str__(self):

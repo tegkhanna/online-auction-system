@@ -9,8 +9,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'portal/main.css' %}" />
 
 {% block content %}
-
-
 <div class = "container">
     <div id= "header">
         <h1>BID PAGE</h1>
@@ -49,6 +47,7 @@
 				</tr>
 				<tr><td colspan = "6" align="center"><input id = "sub" type="submit" value="Submit" /></td></tr>
 				<tr><td id = "msg" colspan = "6" style = "color:red;"></td></tr>
+				<tr><td id = "msg2" colspan = "6" style = "color:red;"></td></tr>
 			</table>
 		
 		</div>
@@ -57,8 +56,16 @@
 </div>
 
 <script >
+var date = new Date("{{bid.articleid.timestart.isoformat}}");
 onload();
-
+function load(x)
+{
+	console.log(date.getMinutes());
+	if(x==1)
+	{
+		window.location.href = "/portal/activeArticles/BidPage/SoldPage/{{bid.articleid.id}}";
+	}
+}
 function checkHigest(check , ele)
 {	
 	var btn = document.getElementById("sub");
@@ -66,7 +73,7 @@ function checkHigest(check , ele)
 	if(ele.value <= check)
 	{
 		btn.disabled = true;
-		msg.innerHTML = "your bid should be more than higest"
+		msg.innerHTML = "your bid should be more than higest";
 	}
 	else
 	{
@@ -74,7 +81,7 @@ function checkHigest(check , ele)
 		msg.innerHTML = ""
 	}
 }
-setTimeout(function () { location.reload(true); }, 10000);
+setTimeout(function () {location.reload(true); }, 10000);
 function onload()
 {
 	setInterval(timeCalc, 500);
@@ -92,15 +99,18 @@ function onload()
 }
 function timeCalc()
 {
+	var btn = document.getElementById("sub");
+	var msg = document.getElementById("msg2");
+	var ele = document.getElementById("id_highestbid");
+
 	var timeShow = document.getElementById("time");
-	var x = parseInt("{{bid.articleid.timestart}}"[18]) * 10;
-	var y = parseInt("{{bid.articleid.timestart}}"[19]);
-	artTime = x+y;
-	artTimeSec = 00;
+
+	artTimeMin = date.getMinutes();
+	artTimeSec = date.getSeconds();;
 	var currentdate = new Date();
 	var min = currentdate.getMinutes();
 	var sec = currentdate.getSeconds();
-	var minGap = min - artTime;
+	var minGap = min - artTimeMin;
 	var secGap = sec - artTimeSec;
 
 	if(minGap < 0)
@@ -109,6 +119,18 @@ function timeCalc()
 	{	secGap+=60;}
 	timeRemainMin = 59 - minGap;
 	timeRemainSec = 59 - secGap;
+	if(timeRemainMin == 0 && timeRemainSec==0)
+		load(1);
+	else
+		load(0);
+	if("{{bid.articleid.status}}" == "sold")
+	{
+		timeRemainSec=0;
+		timeRemainMin=0;
+		btn.disabled = true;
+		msg.innerHTML = "BID HAS ENDED";
+		ele.disabled = true;
+	}
 	if(timeRemainSec < 10)
 	{
 		timeShow.innerHTML = timeRemainMin + ":0" + timeRemainSec;
@@ -119,5 +141,6 @@ function timeCalc()
 	}
 }
 </script>
-{% endblock %}
 
+
+{% endblock %}
