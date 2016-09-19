@@ -71,7 +71,8 @@ class ArticleView(generic.TemplateView):
                 context = {'details': articlereg.objects.filter(userid=id)}
                 return render(request, self.template_name, context)
             else:
-                return HttpResponse("Login as admin to proceed.")
+                messages.error(request, "You are not authorised.")
+                return HttpResponseRedirect(reverse('portal:index'))
         except:
             pass
 
@@ -96,7 +97,7 @@ class ActiveBidView(generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         try:
-            if (('inSession' in request.session) and request.session['inSession'] == True):
+            if (('inSession' in request.session) and request.session['inSession'] == True) or isadmin(request):
                 quer = UserDetail.objects.get(pk=request.session['userID'])
                 articles = articlereg.objects.all()
                 active_articles = []
@@ -120,7 +121,7 @@ class RecentBidView(generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         try:
-            if (('inSession' in request.session) and request.session['inSession'] == True):
+            if (('inSession' in request.session) and request.session['inSession'] == True) or isadmin(request):
                 quer = UserDetail.objects.get(pk=request.session['userID'])
                 articles = articlereg.objects.all()
                 recent_bids = []
