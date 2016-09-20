@@ -6,6 +6,8 @@ from django.utils import timezone
 from portal.models import banned_user
 from passlib.hash import pbkdf2_sha256
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
 # Create your views here.
 from .models import *
 from .forms import *
@@ -36,6 +38,8 @@ class Signup(generic.edit.FormView):
             except UserDetail.DoesNotExist:
                 new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
+                send_mail("Thanks for registering with us.", "", settings.EMAIL_HOST_USER, [new_user.email],
+                          fail_silently=False,html_messgiage="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True

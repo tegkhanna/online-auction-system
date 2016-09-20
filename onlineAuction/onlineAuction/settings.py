@@ -26,6 +26,12 @@ SECRET_KEY = 'y-7o(vmvqdpvq&zts%&*mp4r6u348ul26%wobr25g=a5^ca_ya'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='oasysapooteg@gmail.com'
+EMAIL_HOST_PASSWORD='oasystem'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+
 
 
 # Application definition
@@ -39,8 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'captcha'
-]
+    'captcha',
+
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
