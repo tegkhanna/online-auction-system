@@ -8,32 +8,15 @@
 	</div>
 	<form method="post">
 		{% csrf_token %}
+
 		<div class = "forms">
 			<table id = "try">
-				
-				<th><label for="id_userName">Username:</label></th>
-				<td><input id="id_userName" maxlength="30" name="userName" type="text" required=""></td>
-				</tr>
-				<tr>
-				<th><label for="id_name">Name:</label></th>
-				<td><input id="id_name" maxlength="30" name="name" type="text" required=""></td>
-				</tr>
-				<tr>
-				<th><label for="id_password">Password:</label></th>
-				<td><input id="id_password" name="password" type="password" required=""></td>
-				</tr>
-				<tr>
-				<th><label for="id_email">Email:</label></th>
-				<td><input id="id_email" maxlength="50" name="email" type="text" required="" 
-							onkeypress = "checkEmail(this)"
-							onkeyup = "checkEmail(this)">></td>
-				</tr>
-				<tr><td colspan = "2" align="center"><input  id = "sub" type="submit" value="Submit" /></td></tr>
+                 {{ form}}
+                <tr><td colspan = "2" align="center"><input  id = "sub" type="submit" value="Submit" /></td></tr>
                 <tr id="return"><td colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">Go To Login Page</a></td></tr>
 				<tr>
 				<td id = "msg" colspan = "2" align="center"></td>
 				</tr>
-			</table>
 
 		</div>
 

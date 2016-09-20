@@ -1,10 +1,15 @@
 from django import forms
+from captcha.fields import CaptchaField
 from .models import *
 class UserForm(forms.ModelForm):#user form pre build class
     password = forms.CharField(widget=forms.PasswordInput)
+    email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
+    captcha=CaptchaField()
+    userName=forms.CharField(label="Username:")
     class Meta:
     	model = UserDetail
     	fields = '__all__'
+
 
 
 class LoginForm(forms.Form):

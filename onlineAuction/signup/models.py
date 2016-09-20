@@ -7,7 +7,7 @@ class UserDetail(models.Model):
 	userName=models.CharField(max_length=30)
 	name = models.CharField(max_length=30)
 	password=models.CharField(max_length=256)
-	email=models.CharField(max_length=50)
+	email=models.EmailField(max_length=50)
 
 
 class Visa(models.Model):
