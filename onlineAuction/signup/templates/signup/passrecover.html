@@ -1,0 +1,52 @@
+{% extends 'signup/base.html' %}
+{% block content %}
+    <div class = "container">
+	<div id= "header">
+		<h1>PASSWORD RESET PAGE</h1>
+	</div>
+	<form method="post">
+		{% csrf_token %}
+
+		<div class = "forms">
+			<table id = "try">
+                 {{ form}}
+                <tr><td colspan = "2" align="center"><input  id = "sub" type="submit" value="Submit" /></td></tr>
+                <tr id="return"><td colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">Go To Login Page</a></td></tr>
+				<tr>
+				<td id = "msg" colspan = "2" align="center"></td>
+				</tr>
+
+		</div>
+
+	</form>
+
+</div>
+
+<script type="text/javascript">
+function checkEmail(ele)
+{	
+	var sub = document.getElementById("sub");
+	var msg = document.getElementById("msg");
+	if(validateEmail(ele.value) == true)
+	{
+		msg.innerHTML = "VALID EMAIL";
+		msg.style.color = "green";
+		sub.disabled = false;
+	}
+	else
+	{
+		msg.innerHTML = "INVALID EMAIL ID";
+		msg.style.color = "red";
+		sub.disabled = true;
+	}
+}
+function validateEmail(elementValue){        
+   var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;  
+   return emailPattern.test(elementValue);   
+ }   
+
+
+</script>
+
+
+{% endblock %}

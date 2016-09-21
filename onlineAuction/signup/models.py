@@ -25,3 +25,10 @@ class Admins(models.Model):
 	name = models.CharField(max_length=30)
 	password=models.CharField(max_length=256)
 
+class PasswordRecovery(models.Model):
+    def __str__(self):
+        return str(self.id)
+    userid=models.IntegerField()
+    email=models.EmailField(max_length=50)
+    link=models.CharField(max_length=50)
+

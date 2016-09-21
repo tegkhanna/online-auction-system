@@ -48,6 +48,7 @@ box-shadow: 4px 4px 20px grey;
 }
 #try input:active{
 		box-shadow: 4px 4px 20px yellow;}
+
 .shake {
 	display:inline-block
 }
@@ -123,6 +124,9 @@ h1,p,h2{
 #return a:active {
 	color:grey;
 }
+a{
+
+}
 
 @keyframes fadeout {
 	0%{opacity:0;}
@@ -145,4 +149,5 @@ h1,p,h2{
 	box-shadow: 0 0 5px black;
 	transition:opacity 0.5s;
 }
+
 

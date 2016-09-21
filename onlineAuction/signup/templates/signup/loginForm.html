@@ -10,8 +10,11 @@
 		<div class = "forms">
 			<table id = "try">
 				{{form}}
+
 				<tr><td colspan = "2" align="center"><input type="submit" value="Submit" /></td></tr>
-                <tr id="return"><td colspan = "2" align="center"><a href="{% url 'signup:signUpPage' %}">Go To Signup Page</a></td></tr>
+                <tr id="return"><td colspan="2" align="center"><a id="recpass" href="{% url 'signup:PasswordRecover' %}">Forgot Password?</a></td></tr>
+                <tr id="return"><td colspan = "2" align="center"><a id="recpass" href="{% url 'signup:signUpPage' %}">Go To Signup Page</a></td></tr>
+
 			</table>
 		
 		</div>

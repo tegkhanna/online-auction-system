@@ -19,3 +19,7 @@ class LoginForm(forms.Form):
 class VisaForm(forms.Form):#user form pre build class
 	visaNum = forms.CharField(max_length = 10,label="Visa Number")
 	expDate= forms.DateTimeField(label="Expiry Date:",widget=forms.widgets.DateTimeInput(attrs={'placeholder':'YYYY-MM-DD'}))
+class PassRecoverForm(forms.Form):
+    email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
+class PassChangeForm(forms.Form):
+    password= forms.CharField(widget=forms.PasswordInput)
