@@ -22,6 +22,7 @@ class articlereg(models.Model):
     category=models.CharField(max_length=40)
     desc=models.CharField(max_length=150)
     minbid=models.FloatField(default=0.0)
+    private = models.BooleanField(default = False)
     
 
 class articleimage(models.Model):
@@ -33,3 +34,7 @@ class bids(models.Model):
     userid=models.ForeignKey(userdetails.UserDetail)
     articleid=models.ForeignKey(articlereg)
     highestbid=models.FloatField(default=0.0)
+
+class articleprivateusers(models.Model):
+    article = models.ForeignKey(articlereg)
+    user = models.ForeignKey(userdetails.UserDetail)

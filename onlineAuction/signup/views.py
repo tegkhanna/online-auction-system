@@ -38,8 +38,11 @@ class Signup(generic.edit.FormView):
             except UserDetail.DoesNotExist:
                 new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
+                ####################################################################################################
+                #to be converted to TEMPLATE LATER
+                ######################################################################################
                 send_mail("Thanks for registering with us.", "", settings.EMAIL_HOST_USER, [new_user.email],
-                          fail_silently=False,html_messgiage="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
+                          fail_silently=False,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True

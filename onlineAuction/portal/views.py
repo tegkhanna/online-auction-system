@@ -216,14 +216,22 @@ class RegForm(generic.edit.FormView):
                 stat = "inactive"
             elif(delta > deltaNow - deltaHour):
                 stat = "active"
-
+            if(request.POST['private'] == 'on'):
+                priv = True
+            else:
+                priv = False
             art = quer.articlereg_set.create(
                 timestart=request.POST['timestart'], articlename=request.POST['articlename'],
                 category=request.POST['category'], desc=request.POST['desc'],
-                minbid=request.POST['minbid'], status = stat)
+                minbid=request.POST['minbid'], status = stat,
+                private = priv)
             art.articleimage_set.create(image=request.FILES['image'])
+            if(priv) is True:
+                for users in request.POST['Select_Users']:
+                    art.articlePrivateUsers_set.create(user = UserDetail.objects.get(name = users))
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
+            art.save()
             messages.success(request, "Article registered.")
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
@@ -322,7 +330,17 @@ class Bid(generic.edit.FormView):
             quer = UserDetail.objects.get(pk=request.session['userID'])
             if (quer.visa_set.count() == 0):
                 return HttpResponseRedirect(reverse("signup:VisaForm"))
-            context = {'bid': articlereg.objects.get(pk=a_id).bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
+            art = articlereg.objects.get(pk=a_id)
+            if(art.private == False or art.userid == quer):
+                pass
+            else:
+                try:
+                    art.articlePrivateUsers_set.get(user = quer)
+                    pass
+                except art.articlePrivateUsers.DoesNotExist:
+                    messages.error(request, "You are not authorised for this article bid.")
+                    return HttpResponseRedirect(reverse("portal:index"))
+            context = {'bid': art.bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
                    'form': self.form_class}
             return render(request, self.template_name, context)
 
