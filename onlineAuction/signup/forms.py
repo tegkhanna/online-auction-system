@@ -2,7 +2,7 @@ from django import forms
 from captcha.fields import CaptchaField
 from .models import *
 class UserForm(forms.ModelForm):#user form pre build class
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput,min_length=6)
     email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
     captcha=CaptchaField()
     userName=forms.CharField(label="Username:")
@@ -22,4 +22,4 @@ class VisaForm(forms.Form):#user form pre build class
 class PassRecoverForm(forms.Form):
     email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
 class PassChangeForm(forms.Form):
-    password= forms.CharField(widget=forms.PasswordInput)
+    password= forms.CharField(widget=forms.PasswordInput(),label="Enter New Password:",min_length=6)

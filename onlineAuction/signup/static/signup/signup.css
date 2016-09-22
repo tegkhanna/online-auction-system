@@ -2,6 +2,21 @@ body
 {
 	background-color: #03A9F4;
 }
+#message {
+    position: absolute;
+    z-index: 1;
+    top: -50%;
+    left: 25%;
+    right: 25%;
+    background: #fde073;
+    text-align: center;
+	animation-name: fadeout;
+	animation-duration: 2s;
+    overflow: hidden;
+	opacity:0;
+	box-shadow: 0 0 5px black;
+
+}
 #header
 {
 	position: relative;
@@ -124,30 +139,20 @@ h1,p,h2{
 #return a:active {
 	color:grey;
 }
-a{
 
-}
+
+
 
 @keyframes fadeout {
-	0%{opacity:0;}
+	0%{opacity:0;top:50%}
     20%{opacity:1;}
-	80%{opacity:1;}
-	100%{opacity:0;}
+	80%{opacity:1;top:50%;}
+	100%{opacity:0;
+        top:-50%;
+    }
+
 }
-#message {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #fde073;
-    text-align: center;
-	animation-name: fadeout;
-	animation-duration: 5s;
-    overflow: hidden;
-	opacity:0;
-	box-shadow: 0 0 5px black;
-	transition:opacity 0.5s;
-}
+
+
 
 

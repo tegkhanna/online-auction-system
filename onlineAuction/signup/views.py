@@ -40,7 +40,7 @@ class Signup(generic.edit.FormView):
                 new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
                 send_mail("Thanks for registering with us.", "", settings.EMAIL_HOST_USER, [new_user.email],
-                          fail_silently=True,html_messgiage="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
+                          fail_silently=True,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True
@@ -161,15 +161,15 @@ class PasswordRecover(generic.edit.FormView):
                 quer=PasswordRecovery(link=link,userid=userid,email=request.POST['email'])
                 quer.save()
             try:
-                print(request.POST['email'])
                 recoverlink="http://127.0.0.1:8000/signup/passwordchange/"+link
-                message="<a href="+recoverlink+">Click here to reset your password</a>"
-                send_mail(request.POST['email'], "HELLO", settings.EMAIL_HOST_USER, [request.POST['email']],
+                uname=UserDetail.objects.get(email=request.POST['email']).userName
+                message="<h3><a href="+recoverlink+">Click here to reset your password</a></h3><br><h3>If you forgot your username here it is:"+uname+"</h3>"
+                send_mail("PASSWORD RESET FOR ONLINE AUCTION SYSTEM", "If you never requested for it kindly ignore.", settings.EMAIL_HOST_USER, [request.POST['email']],
                       fail_silently=False, html_message=message)
                 messages.success(request,"A password recovery link has been sent to your mail.")
                 return HttpResponseRedirect(reverse('signup:PasswordRecover'))
             except:
-                messages.error(request, "Our mailing servers are down at the moment.Try again later")
+                messages.error(request, "Our mailing servers are down at the moment.Try again later.")
                 return HttpResponseRedirect(reverse('signup:PasswordRecover'))
 class PasswordChanger(generic.edit.FormView):
     form_class = PassChangeForm
