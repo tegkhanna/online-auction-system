@@ -216,14 +216,24 @@ class RegForm(generic.edit.FormView):
                 stat = "inactive"
             elif(delta > deltaNow - deltaHour):
                 stat = "active"
-
+            try :
+                request.POST['private'] == 'on'
+                priv = True
+            except:
+                priv = False
             art = quer.articlereg_set.create(
                 timestart=request.POST['timestart'], articlename=request.POST['articlename'],
                 category=request.POST['category'], desc=request.POST['desc'],
-                minbid=request.POST['minbid'], status = stat)
+                minbid=request.POST['minbid'], status = stat,
+                private = priv)
             art.articleimage_set.create(image=request.FILES['image'])
+            USERS = request.POST.getlist('Select_Users')
+            if(priv) is True:
+                for users in USERS:
+                    art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
+            art.save()
             messages.success(request, "Article registered.")
             return HttpResponseRedirect(reverse("portal:userArticles"))
         except UserDetail.DoesNotExist:
@@ -256,7 +266,18 @@ class EditArticle(generic.edit.FormView):
         try:
             stat = None
             quer = UserDetail.objects.get(pk=request.session['userID'])
+            try :
+                request.POST['private'] == 'on'
+                priv = True
+            except:
+                priv = False
+
             art = quer.articlereg_set.get(pk=int(a_id))
+            art.private = priv
+            USERS = request.POST.getlist('Select_Users')
+            if(priv) is True:
+                for users in USERS:
+                    art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
             art.timestart = request.POST['timestart']
             art.articlename = request.POST['articlename']
             art.category = request.POST['category']
@@ -289,6 +310,7 @@ class EditArticle(generic.edit.FormView):
             elif(delta > deltaNow - deltaHour):
                 stat = "active"
             art.status = stat
+            
 
 
             img.save()
@@ -322,7 +344,17 @@ class Bid(generic.edit.FormView):
             quer = UserDetail.objects.get(pk=request.session['userID'])
             if (quer.visa_set.count() == 0):
                 return HttpResponseRedirect(reverse("signup:VisaForm"))
-            context = {'bid': articlereg.objects.get(pk=a_id).bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
+            art = articlereg.objects.get(pk=a_id)
+            if(art.private == False or art.userid == quer):
+                pass
+            else:
+                try:
+                    art.privateusers_set.get(user = quer)
+                    pass
+                except privateusers.DoesNotExist:
+                    messages.error(request, "You are not authorised for this article bid.")
+                    return HttpResponseRedirect(reverse("portal:index"))
+            context = {'bid': art.bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
                    'form': self.form_class}
             return render(request, self.template_name, context)
 
@@ -381,7 +413,6 @@ class BidsWonView(generic.TemplateView):
                 for a in articles:
                     if a.timestart < (now - timedelta(hours=1)) and a.timestart > (now - timedelta(days=1, hours=1)):
                         if((a.bids_set.reverse()[0].highestbid != a.minbid) and (a.bids_set.reverse()[0].userid == quer) and (a.userid != quer)):
-                            return HttpResponse(a.userid.userName)
                             won_bids.append(a.id)
                         a.status = "sold"
                         a.save()

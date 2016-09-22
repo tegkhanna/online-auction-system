@@ -16,7 +16,8 @@
 		<div class = "forms">
 			<table id = "try">
 				{{form}}
-				<tr><td colspan = "2" align="center"><input type="submit" value="Submit" /></td></tr>
+				<tr><td id="sub" colspan = "2" align="center"><input type="submit" value="Submit" /></td></tr>
+				<tr><td id = "msg" colspan = "6" style = "color:red;"></td></tr>
 			</table>
 		
 		</div>
@@ -25,4 +26,24 @@
 
 </div>
 
+
+<script type="text/javascript">
+	
+
+function checkHigest(ele)
+{	
+	var btn = document.getElementById("sub");
+	var msg = document.getElementById("msg");
+	if(ele.value <= 0)
+	{
+		btn.disabled = true;
+		msg.innerHTML = "min bid should be more 0";
+	}
+	else
+	{
+		btn.disabled = false;
+		msg.innerHTML = ""
+	}
+}
+</script>
 {% endblock %}

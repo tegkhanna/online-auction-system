@@ -8,6 +8,10 @@ from passlib.hash import pbkdf2_sha256
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
+
+from django.utils import timezone, dateparse
+
+from datetime import datetime, timedelta
 # Create your views here.
 from .models import *
 from .forms import *
@@ -29,6 +33,11 @@ class Signup(generic.edit.FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            messages.error(request,"WRONG CAPTCHA")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         new_user = form.save(commit=False)
         try:
             quer = UserDetail.objects.get(email=new_user.email)
@@ -39,7 +48,7 @@ class Signup(generic.edit.FormView):
                 new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
                 send_mail("Thanks for registering with us.", "", settings.EMAIL_HOST_USER, [new_user.email],
-                          fail_silently=False,html_messgiage="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
+                          fail_silently=False,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True
@@ -131,6 +140,14 @@ class VisaForm(generic.edit.FormView):
     def post(self, request, *args, **kwargs):
         try:
             quer = UserDetail.objects.get(pk=request.session['userID'])
+            try:
+                date = dateparse.parse_date(request.POST['expDate'])
+                if(date < date.today()):
+                    messages.error(request,"VISA is already expired")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except ValueError:
+                messages.error(request,"Enter correct date time values")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
             messages.success(request, "Visa registered")
             return HttpResponseRedirect(reverse('portal:index'))

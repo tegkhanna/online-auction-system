@@ -18,4 +18,4 @@ class LoginForm(forms.Form):
 
 class VisaForm(forms.Form):#user form pre build class
 	visaNum = forms.CharField(max_length = 10,label="Visa Number")
-	expDate= forms.DateTimeField(label="Expiry Date:",widget=forms.widgets.DateTimeInput(attrs={'placeholder':'YYYY-MM-DD'}))
+	expDate= forms.DateTimeField(label="Expiry Date:",widget=forms.DateTimeInput(attrs={'placeholder':'YYYY-MM-DD', 'type' : 'date'}))
