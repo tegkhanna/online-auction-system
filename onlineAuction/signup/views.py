@@ -8,10 +8,10 @@ from passlib.hash import pbkdf2_sha256
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
-
 from django.utils import timezone, dateparse
 
 from datetime import datetime, timedelta
+import string,random
 # Create your views here.
 from .models import *
 from .forms import *
@@ -48,7 +48,8 @@ class Signup(generic.edit.FormView):
                 new_user.password=pbkdf2_sha256.encrypt(new_user.password,rounds=12000,salt_size=32)
                 new_user.save()
                 send_mail("Thanks for registering with us.", "", settings.EMAIL_HOST_USER, [new_user.email],
-                          fail_silently=False,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
+                          fail_silently=False,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>"
+                          fail_silently=True,html_message="<h1>THANKS ALOT FOR JOINING OUR ONLINE AUCTION SYSTEM</h1>")
                 quer=UserDetail.objects.get(userName=new_user.userName)
                 request.session['userID'] = quer.id
                 request.session['inSession'] = True
@@ -149,11 +150,79 @@ class VisaForm(generic.edit.FormView):
                 messages.error(request,"Enter correct date time values")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             quer.visa_set.create(visaNum = request.POST['visaNum'], expDate = request.POST['expDate'])
-            messages.success(request, "Visa registered")
+            messages.success(request, "Visa Registered")
             return HttpResponseRedirect(reverse('portal:index'))
         except UserDetail.DoesNotExist:
             messages.error(request, "You are not logged in.")
             return HttpResponseRedirect(reverse('signup:LoginForm'))
+class PasswordRecover(generic.edit.FormView):
+    form_class = PassRecoverForm
+    template_name='signup/passrecover.html'
+    def get(self,request,*args,**kwargs):
+        form=self.form_class
+        return render(request,self.template_name,{'form':form})
+    def post(self, request, *args, **kwargs):
+        if UserDetail.objects.filter(email=request.POST['email']).exists()==False:
+            messages.error(request, "This Email Id is not associated with any account.")
+            return HttpResponseRedirect(reverse('signup:PasswordRecover'))
+        else:
+            def id_generator(size=25, chars=string.ascii_uppercase + string.digits+string.ascii_lowercase):
+                return ''.join(random.choice(chars) for _ in range(size))
+            userid=UserDetail.objects.get(email=request.POST['email']).id
+            link = id_generator()
+            if PasswordRecovery.objects.filter(email=request.POST['email']).exists():
+                quer=PasswordRecovery.objects.get(email=request.POST['email'])
+                quer.link=link
+                quer.save()
+            else:
+                quer=PasswordRecovery(link=link,userid=userid,email=request.POST['email'])
+                quer.save()
+            try:
+                recoverlink="http://127.0.0.1:8000/signup/passwordchange/"+link
+                uname=UserDetail.objects.get(email=request.POST['email']).userName
+                message="<h3><a href="+recoverlink+">Click here to reset your password</a></h3><br><h3>If you forgot your username here it is:"+uname+"</h3>"
+                send_mail("PASSWORD RESET FOR ONLINE AUCTION SYSTEM", "If you never requested for it kindly ignore.", settings.EMAIL_HOST_USER, [request.POST['email']],
+                      fail_silently=False, html_message=message)
+                messages.success(request,"A password recovery link has been sent to your mail.")
+                return HttpResponseRedirect(reverse('signup:PasswordRecover'))
+            except:
+                messages.error(request, "Our mailing servers are down at the moment.Try again later.")
+                return HttpResponseRedirect(reverse('signup:PasswordRecover'))
+class PasswordChanger(generic.edit.FormView):
+    form_class = PassChangeForm
+    template_name = 'signup/passchange.html'
+    def get(self, request,getlink, *args, **kwargs):
+        recoverlink=getlink
+        if PasswordRecovery.objects.filter(link=recoverlink).exists()==False:
+            return HttpResponseRedirect(reverse('signup:index'))
+        else:
+            form = self.form_class
+            return render(request, self.template_name, {'form': form})
+    def post(self, request,getlink, *args, **kwargs):
+        recoverlink =getlink
+        userid=PasswordRecovery.objects.get(link=recoverlink).userid
+        if UserDetail.objects.filter(id=userid).exists():
+            quer= UserDetail.objects.get(id=userid)
+            quer.password=pbkdf2_sha256.encrypt(request.POST["password"],rounds=12000,salt_size=32)
+            quer.save()
+            user=PasswordRecovery.objects.get(link=recoverlink)
+            user.delete()
+            messages.success(request,"Password reset successful.")
+            return HttpResponseRedirect(reverse('signup:LoginForm'))
+        else:
+            messages.success(request, "You have already reset your password.")
+            return HttpResponseRedirect(reverse('signup:index'))
+
+
+
+
+
+
+
+
+
+
+
 def Logout(request):
     try:
         request.session['userID']=None

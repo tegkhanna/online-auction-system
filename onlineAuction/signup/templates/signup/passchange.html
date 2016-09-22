@@ -1,0 +1,26 @@
+{% extends 'signup/base.html' %}
+{% block content %}
+    <div class = "container">
+	<div id= "header">
+		<h1>PASSWORD CHANGE PAGE</h1>
+	</div>
+	<form method="post">
+		{% csrf_token %}
+
+		<div class = "forms">
+			<table id = "try">
+                 {{ form}}
+                <tr><td colspan = "2" align="center"><input  id = "sub" type="submit" value="Submit" /></td></tr>
+                <tr id="return"><td colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">Go To Login Page</a></td></tr>
+
+
+		</div>
+
+	</form>
+
+</div>
+
+
+
+
+{% endblock %}
