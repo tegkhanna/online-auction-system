@@ -83,9 +83,13 @@ class ArticleView(generic.TemplateView):
                 messages.error(request, "Ended or active bids cannot be deleted")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                b.delete()
-                messages.success(request, "Article deleted")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                try:
+                    b.delete()
+                    messages.success(request, "Article deleted")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                except:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
         else:
             messages.error(request, "You are not authorised.")
             return HttpResponseRedirect(reverse('portal:index'))
@@ -185,12 +189,14 @@ class RegForm(generic.edit.FormView):
     template_name = 'portal/articleForm.html'
 
     def get(self, request, *args, **kwargs):
-        context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name, 'form': self.form_class}
-        return render(request, self.template_name, context)
-
+        try:
+            context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name, 'form': self.form_class}
+            return render(request, self.template_name, context)
+        except:
+            return HttpResponseRedirect(reverse('signup:index'))
     def post(self, request, *args, **kwargs):
         try:
-            stat = None;
+            stat = None
             quer = UserDetail.objects.get(pk=request.session['userID'])
             try:
                 time = dateparse.parse_datetime(request.POST['timestart'])
@@ -209,7 +215,7 @@ class RegForm(generic.edit.FormView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             timedif = (delta - deltaNow).seconds
             deltaHour = timedelta(seconds=3600)
-            if (delta < deltaNow - deltaHour):
+            if (time < (now - timedelta(hours=1))):
                 messages.error(request, "Enter correct date time.")
                 return HttpResponseRedirect(reverse("portal:RegForm"))
             if(delta > deltaNow):
@@ -302,7 +308,7 @@ class EditArticle(generic.edit.FormView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             deltaHour = timedelta(seconds=3600)
             timedif = (delta - deltaNow).seconds
-            if (delta < deltaNow - deltaHour):
+            if (time < (now - timedelta(hours=1))):
                 messages.error(request, "Enter correct date time.")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             if(delta > deltaNow):
@@ -421,4 +427,4 @@ class BidsWonView(generic.TemplateView):
             else:
                 return HttpResponse("Login as user to proceed.")
         except UserDetail.DoesNotExist:
-            pass
+            return HttpResponseRedirect(reverse('signup:index'))
