@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from signup.models import UserDetail
 from portal.models import articlereg
 from portal.models import banned_user
+from django.conf import settings
+from django.core.mail import send_mail, send_mass_mail
 from .forms import *
 
 from django.contrib import messages
@@ -253,10 +255,16 @@ class RegForm(generic.edit.FormView):
                 minbid=request.POST['minbid'], status = stat,
                 private = priv)
             art.articleimage_set.create(image=request.FILES['image'])
+            mailList = []
             USERS = request.POST.getlist('Select_Users')
             if(priv) is True:
                 for users in USERS:
                     art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
+                    mailList.append(UserDetail.objects.get(name = str(users)).email)
+
+                send_mail("INVITED FOR BIDS",
+                                "", settings.EMAIL_HOST_USER,
+                                mailList,fail_silently = True)
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
             art.save()
