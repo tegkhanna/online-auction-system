@@ -1,5 +1,6 @@
 from django.db import models
 from signup import models as userdetails
+from channels import Group
 
 # Create your models here.
 class banned_user(models.Model):
@@ -34,9 +35,11 @@ class articleimage(models.Model):
         return str(self.image).split('/')[-1]
     article = models.ForeignKey(articlereg)
     image = models.ImageField(upload_to=content_file_name,default='article_images/'+str(id)+'.jpg')
+
 class bids(models.Model):
     userid=models.ForeignKey(userdetails.UserDetail)
     articleid=models.ForeignKey(articlereg)
     highestbid=models.FloatField(default=0.0)
+
 
 

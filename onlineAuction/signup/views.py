@@ -161,6 +161,8 @@ class VisaForm(generic.edit.FormView):
         except UserDetail.DoesNotExist:
             messages.error(request, "You are not logged in.")
             return HttpResponseRedirect(reverse('signup:LoginForm'))
+
+
 class PasswordRecover(generic.edit.FormView):
     form_class = PassRecoverForm
     template_name='signup/passrecover.html'
@@ -194,6 +196,8 @@ class PasswordRecover(generic.edit.FormView):
             except:
                 messages.error(request, "Our mailing servers are down at the moment.Try again later.")
                 return HttpResponseRedirect(reverse('signup:PasswordRecover'))
+
+
 class PasswordChanger(generic.edit.FormView):
     form_class = PassChangeForm
     template_name = 'signup/passchange.html'

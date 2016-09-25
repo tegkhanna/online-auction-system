@@ -343,6 +343,7 @@ class Bid(generic.edit.FormView):
     template_name = 'portal/BidArticle.html'
 
     def get(self, request, a_id, *args, **kwargs):
+
         if articlereg.objects.filter(pk=a_id).exists()==False:
             messages.error(request,"Article not found")
             return HttpResponseRedirect(reverse("portal:index"))
@@ -362,6 +363,7 @@ class Bid(generic.edit.FormView):
                     return HttpResponseRedirect(reverse("portal:index"))
             context = {'bid': art.bids_set.reverse()[0], 'userName': quer.name, 'quer': quer,
                    'form': self.form_class}
+
             return render(request, self.template_name, context)
 
     def post(self, request, a_id, *args, **kwargs):
@@ -370,6 +372,9 @@ class Bid(generic.edit.FormView):
             bid.highestbid = float(request.POST['highestbid'])
             bid.userid = UserDetail.objects.get(pk=request.session['userID'])
             bid.save()
+            Group("bids").send({
+                "text": "%s" % (str(bid.userid.userName) + "," + str(bid.highestbid))
+            })
             return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
         else:
             pass

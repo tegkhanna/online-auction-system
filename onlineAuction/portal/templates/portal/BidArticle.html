@@ -30,8 +30,8 @@
                 </tr>
 				<tr>
 					<th colspan = "1" align="left">HIGHEST</th>
-					<th colspan = "3" align="center">{{bid.userid.userName}}</th>
-					<th colspan = "2" align="left">{{bid.highestbid}}</th>
+					<th id="user" colspan = "3" align="center">{{bid.userid.userName}}</th>
+					<th id="high" colspan = "2" align="left">{{bid.highestbid}}</th>
 				</tr>
 				<tr>
 	                <th colspan = "3">TIME REMAINING</th>
@@ -45,7 +45,7 @@
 						onkeyup = "checkHigest({{bid.highestbid}}, this)">
 				</td>
 				</tr>
-				<tr><td colspan = "6" align="center"><input id = "sub" type="submit" value="Submit" /></td></tr>
+				<tr><td colspan = "6" align="center"><input id = "sub" type="submit" value="Submit" onclick="sendmessage()"/></td></tr>
 				<tr><td id = "msg" colspan = "6" style = "color:red;"></td></tr>
 				<tr><td id = "msg2" colspan = "6" style = "color:red;"></td></tr>
 			</table>
@@ -56,6 +56,15 @@
 </div>
 
 <script >
+socket = new WebSocket("ws://" + window.location.host + "/chat/");
+socket.onmessage = function(e) {
+    var user = document.getElementById("user");
+    var high = document.getElementById("high");
+    user.innerHTML = e.data.split(",")[0];
+    high.innerHTML = parseFloat(e.data.split(",")[1]);
+
+
+}
 var date = new Date("{{bid.articleid.timestart.isoformat}}");
 onload();
 function load(x)
@@ -73,7 +82,7 @@ function checkHigest(check , ele)
 	if(ele.value <= check)
 	{
 		btn.disabled = true;
-		msg.innerHTML = "your bid should be more than higest";
+		msg.innerHTML = "Your bid should be more than higest";
 	}
 	else
 	{
@@ -81,7 +90,7 @@ function checkHigest(check , ele)
 		msg.innerHTML = ""
 	}
 }
-setTimeout(function () {location.reload(true); }, 10000);
+
 function onload()
 {
 	setInterval(timeCalc, 500);

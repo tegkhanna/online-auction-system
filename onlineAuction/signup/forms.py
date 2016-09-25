@@ -4,7 +4,7 @@ from .models import *
 class UserForm(forms.ModelForm):#user form pre build class
     password = forms.CharField(widget=forms.PasswordInput,min_length=6)
     email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
-    captcha=CaptchaField()
+    captcha=CaptchaField(output_format= u'%(hidden_field)s%(image)s<br>%(text_field)s')
     userName=forms.CharField(label="Username:")
     class Meta:
     	model = UserDetail
