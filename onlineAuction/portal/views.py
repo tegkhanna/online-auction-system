@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from signup.models import UserDetail
 from portal.models import articlereg
 from portal.models import banned_user
+from django.conf import settings
+from django.core.mail import send_mail, send_mass_mail
 from .forms import *
 
 from django.contrib import messages
@@ -175,11 +177,31 @@ class IndexView(generic.TemplateView):
     def get(self, request, *args, **kwargs):
         try:
             if 'userID' in request.session and request.session['userID'] != None:
-                context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
+                quer = UserDetail.objects.get(pk=request.session['userID'])
+                arts = privateusers.objects.all()
+                articles = []
+                now = timezone.now()
+                emptyInv = 0
+                emptyInt = 0
+                for art in arts:
+                    endtime = art.article.timestart + timedelta(hours=1)
+                    if now >= art.article.timestart and now < endtime:
+                        if(art.user == quer):
+                            articles.append(art.article)
+                            emptyInv = 1
+                arts = articlereg.objects.filter(category = quer.interests)
+                interest = []
+                now = timezone.now()
+                for art in arts:
+                    endtime = art.timestart + timedelta(hours=1)
+                    if now >= art.timestart and now < endtime:
+                        interest.append(art)
+                        emptyInt = 1
+
+                context = {'userName': quer.name, 'article': articles, 'emptyInv':emptyInv, 'interest':interest,'emptyInt':emptyInt}
                 return render(request, self.template_name, context)
             else:
                 return HttpResponseRedirect(reverse("signup:LoginForm"))
-
         except UserDetail.DoesNotExist:
             return HttpResponseRedirect(reverse("signup:LoginForm"))
 
@@ -233,10 +255,16 @@ class RegForm(generic.edit.FormView):
                 minbid=request.POST['minbid'], status = stat,
                 private = priv)
             art.articleimage_set.create(image=request.FILES['image'])
+            mailList = []
             USERS = request.POST.getlist('Select_Users')
             if(priv) is True:
                 for users in USERS:
                     art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
+                    mailList.append(UserDetail.objects.get(name = str(users)).email)
+
+                send_mail("INVITED FOR BIDS",
+                                "", settings.EMAIL_HOST_USER,
+                                mailList,fail_silently = True)
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
             art.save()

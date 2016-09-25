@@ -6,6 +6,9 @@ class UserForm(forms.ModelForm):#user form pre build class
     email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
     captcha=CaptchaField(output_format= u'%(hidden_field)s%(image)s<br>%(text_field)s')
     userName=forms.CharField(label="Username:")
+    Choices=(('Book','Book'),('Vehicle','Vehicle'),('Coin or Stamp','Coin or Stamp'),('Antique','Antique'),
+             ('Electronics','Electronics'),('Others','Others'))
+    interests=forms.ChoiceField(choices=Choices, label = "Interest:")
     class Meta:
     	model = UserDetail
     	fields = '__all__'

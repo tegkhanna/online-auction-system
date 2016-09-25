@@ -8,6 +8,8 @@ class UserDetail(models.Model):
 	name = models.CharField(max_length=30)
 	password=models.CharField(max_length=256)
 	email=models.EmailField(max_length=50)
+	interests = models.CharField(max_length=40, default = 'Vehicle', null = True)
+
 
 
 class Visa(models.Model):
