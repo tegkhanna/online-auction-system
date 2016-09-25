@@ -156,3 +156,8 @@ h1,p,h2{
 
 
 
+.captcha
+{
+	float:right;
+	margin-top:5%;
+}

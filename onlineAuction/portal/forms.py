@@ -15,7 +15,7 @@ class RegForm(forms.Form):#user form pre build class
     for names in UserDetail.objects.all():
         tup = (names.name ,names.name)
         Users.append(tup)
-    private = forms.BooleanField(initial = True, required = False)
+    private = forms.BooleanField(initial = False, required = False, widget=forms.widgets.CheckboxInput(attrs={'onclick':'hide(this)'}))
     Select_Users = forms.MultipleChoiceField(required = False, widget = forms.CheckboxSelectMultiple, choices = Users)
     image=forms.ImageField()
 
@@ -31,7 +31,7 @@ class EditRegForm(forms.Form):#user form pre build class
     for names in UserDetail.objects.all():
         tup = (names.name ,names.name)
         Users.append(tup)
-    private = forms.BooleanField(initial = True, required = False)
+    private = forms.BooleanField(initial = False, required = False, widget=forms.widgets.CheckboxInput(attrs={'onclick':'hide(this)'}))
     Select_Users = forms.MultipleChoiceField(required = False, widget = forms.CheckboxSelectMultiple, choices = Users)
     minbid=forms.FloatField(min_value=0,label="Minimum bid:")
     image=forms.ImageField()

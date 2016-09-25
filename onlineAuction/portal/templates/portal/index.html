@@ -9,7 +9,7 @@
     <div id= "header">
         <h1>HOME</h1>
     </div>
-<tr><th colspan="6" align="center">INVITED BIDS</th></tr>
+
 <div  id="tablearticle">
 <table>
     <tr><th colspan="6" align="center">INVITED BIDS</th></tr>
@@ -25,7 +25,7 @@
 {% for item in article %}
 
     <tr>
-    <td><a href="BidPage/{{item.id}}">Bid on this</a></td>
+    <td><a href="activeArticles/BidPage/{{item.id}}">Bid on this</a></td>
         <td>{{ item.articlename}}</td>
         <td>{{ item.category }}</td>
         <td>{{ item.desc }}</td>
@@ -33,9 +33,14 @@
         <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
 
      </tr>
+
 {% endfor %}
+
+{% if emptyInv is 0 %}
+     <tr><th colspan="6" align="center" style = "color:red;">NOT INVITED IN ANY</th></tr>
+{% endif %}
 </table>
-<table>
+<table style ="padding-top:10%;">
     <tr><th colspan="6" align="center">INTERESTED BIDS</th></tr>
     <tr>
         <th>Start Bid</th>
@@ -44,12 +49,11 @@
         <th>Description</th>
         <th>Minimum Bid</th>
         <th>Image</th>
-
     </tr>
 {% for item in interest %}
 
     <tr>
-    <td><a href="BidPage/{{item.id}}">Bid on this</a></td>
+    <td><a href="activeArticles/BidPage/{{item.id}}">Bid on this</a></td>
         <td>{{ item.articlename}}</td>
         <td>{{ item.category }}</td>
         <td>{{ item.desc }}</td>
@@ -57,7 +61,11 @@
         <td><img src="{% static 'portal/article_images/'%}{{item.articleimage_set.reverse.0}}" alt="Image"></td>
 
      </tr>
+
 {% endfor %}
+{% if emptyInt == 0 %}
+     <tr><th colspan="6" align="center" style = "color:red;">NO ARTICLES OF INTEREST</th></tr>
+{% endif %}
 </table>
 </div>
 {% endblock %}

@@ -179,11 +179,14 @@ class IndexView(generic.TemplateView):
                 arts = privateusers.objects.all()
                 articles = []
                 now = timezone.now()
+                emptyInv = 0
+                emptyInt = 0
                 for art in arts:
                     endtime = art.article.timestart + timedelta(hours=1)
                     if now >= art.article.timestart and now < endtime:
                         if(art.user == quer):
                             articles.append(art.article)
+                            emptyInv = 1
                 arts = articlereg.objects.filter(category = quer.interests)
                 interest = []
                 now = timezone.now()
@@ -191,8 +194,9 @@ class IndexView(generic.TemplateView):
                     endtime = art.timestart + timedelta(hours=1)
                     if now >= art.timestart and now < endtime:
                         interest.append(art)
+                        emptyInt = 1
 
-                context = {'userName': quer.name, 'article': articles, 'interest':interest}
+                context = {'userName': quer.name, 'article': articles, 'emptyInv':emptyInv, 'interest':interest,'emptyInt':emptyInt}
                 return render(request, self.template_name, context)
             else:
                 return HttpResponseRedirect(reverse("signup:LoginForm"))

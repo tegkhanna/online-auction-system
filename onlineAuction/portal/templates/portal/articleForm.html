@@ -29,7 +29,8 @@
 
 <script type="text/javascript">
 	
-
+var x = document.getElementById("id_private");
+hide(x);
 function checkHigest(ele)
 {	
 	var btn = document.getElementById("sub");
@@ -45,5 +46,21 @@ function checkHigest(ele)
 		msg.innerHTML = ""
 	}
 }
+
+function hide(ele)
+{
+	var list = document.getElementById("id_Select_Users");
+	list.style.listStyle="none"
+	if(ele.checked == true)
+	{
+		list.style.display = "block";
+	}
+	else
+	{
+		list.style.display = "none";
+	}
+}
+
+
 </script>
 {% endblock %}
