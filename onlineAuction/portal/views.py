@@ -175,11 +175,27 @@ class IndexView(generic.TemplateView):
     def get(self, request, *args, **kwargs):
         try:
             if 'userID' in request.session and request.session['userID'] != None:
-                context = {'userName': UserDetail.objects.get(pk=request.session['userID']).name}
+                quer = UserDetail.objects.get(pk=request.session['userID'])
+                arts = privateusers.objects.all()
+                articles = []
+                now = timezone.now()
+                for art in arts:
+                    endtime = art.article.timestart + timedelta(hours=1)
+                    if now >= art.article.timestart and now < endtime:
+                        if(art.user == quer):
+                            articles.append(art.article)
+                arts = articlereg.objects.filter(category = quer.interests)
+                interest = []
+                now = timezone.now()
+                for art in arts:
+                    endtime = art.timestart + timedelta(hours=1)
+                    if now >= art.timestart and now < endtime:
+                        interest.append(art)
+
+                context = {'userName': quer.name, 'article': articles, 'interest':interest}
                 return render(request, self.template_name, context)
             else:
                 return HttpResponseRedirect(reverse("signup:LoginForm"))
-
         except UserDetail.DoesNotExist:
             return HttpResponseRedirect(reverse("signup:LoginForm"))
 
