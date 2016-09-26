@@ -262,8 +262,8 @@ class RegForm(generic.edit.FormView):
                     art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
                     mailList.append(UserDetail.objects.get(name = str(users)).email)
 
-                send_mail("INVITED FOR BIDS",
-                                "", settings.EMAIL_HOST_USER,
+                send_mail("INVITED FOR BIDS ON ONLINE AUCTION SYSTEM",
+                                "You have been invited for new bids.Please come and bid now.", settings.EMAIL_HOST_USER,
                                 mailList,fail_silently = True)
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])

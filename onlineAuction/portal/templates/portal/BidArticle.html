@@ -56,7 +56,7 @@
 </div>
 
 <script >
-socket = new WebSocket("ws://" + window.location.host + "/chat/");
+socket = new WebSocket("ws://" + window.location.host + "/bids/");
 socket.onmessage = function(e) {
     var user = document.getElementById("user");
     var high = document.getElementById("high");

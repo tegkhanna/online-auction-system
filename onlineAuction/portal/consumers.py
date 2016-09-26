@@ -2,11 +2,11 @@ from channels import Group
 
 # Connected to websocket.connect
 def ws_add(message):
-    Group("chat").add(message.reply_channel)
+    Group("bids").add(message.reply_channel)
 
 # Connected to websocket.receive
 def ws_message(message):
-    """Group("chat").send({
+    """Group("bids").send({
         "text": "%s" % message.content['text'],
         })"""
     pass
@@ -14,4 +14,4 @@ def ws_message(message):
 
 # Connected to websocket.disconnect
 def ws_disconnect(message):
-    Group("chat").discard(message.reply_channel)
+    Group("bids").discard(message.reply_channel)
