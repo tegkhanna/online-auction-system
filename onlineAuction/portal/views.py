@@ -266,11 +266,14 @@ class RegForm(generic.edit.FormView):
                                 "<h1>YOU ARE INVITED FOR A BID<h1><h3>PLEASE CLICK ON THE LINK BELLOW</h3>" +\
                                 "<a href = 'http://localhost:8000/portal/activeArticles/BidPage/" + str(art.id)+"'>"+str(art.articlename)+"</a>" +\
                                 "</body>"
-                send_mail("INVITED FOR BIDS",
+                try:
+                    send_mail("INVITED FOR BIDS",
                                 "", settings.EMAIL_HOST_USER,
                                 mailList,
                                 fail_silently = True,
                                 html_message=template)
+                except:
+                    pass
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
             art.save()
@@ -401,17 +404,22 @@ class Bid(generic.edit.FormView):
             return render(request, self.template_name, context)
 
     def post(self, request, a_id, *args, **kwargs):
-        bid = articlereg.objects.get(pk=a_id).bids_set.reverse()[0]
-        if (bid.highestbid < float(request.POST['highestbid'])):
-            bid.highestbid = float(request.POST['highestbid'])
-            bid.userid = UserDetail.objects.get(pk=request.session['userID'])
-            bid.save()
-            Group("bids").send({
-                "text": "%s" % (str(bid.userid.userName) + "," + str(bid.highestbid))
-            })
+        try:
+            bid = articlereg.objects.get(pk=a_id).bids_set.reverse()[0]
+            if (bid.highestbid < float(request.POST['highestbid'])):
+                bid.highestbid = float(request.POST['highestbid'])
+                bid.userid = UserDetail.objects.get(pk=request.session['userID'])
+                bid.save()
+                Group("bids").send({
+                    "text": "%s" % (str(bid.userid.userName) + "," + str(bid.highestbid))
+                })
+                return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
+            else:
+                pass
+        except:
+            messages.error(request,"Enter a value.")
             return HttpResponseRedirect("/portal/activeArticles/BidPage/" + str(a_id))
-        else:
-            pass
+
     def sold(request, a_id):
         article = articlereg.objects.get(pk = a_id)
         article.status = "sold"
