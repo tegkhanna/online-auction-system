@@ -11,11 +11,14 @@
 
 		<div class = "forms">
 			<table id = "try">
-                 {{ form}}
+                 {{form}}
                 <tr><td colspan = "2" align="center"><input  id = "sub" type="submit" value="Submit" /></td></tr>
                 <tr id="return"><td colspan = "2" align="center"><a href="{% url 'signup:LoginForm' %}">Go To Login Page</a></td></tr>
 				<tr>
 				<td id = "msg" colspan = "2" align="center"></td>
+				</tr>
+				<tr>
+				<td id = "msg2" colspan = "2" align="center"></td>
 				</tr>
 			</table>
 
@@ -30,6 +33,7 @@ function checkEmail(ele)
 {	
 	var sub = document.getElementById("sub");
 	var msg = document.getElementById("msg");
+	var user = document.getElementById("id_userName")
 	if(validateEmail(ele.value) == true)
 	{
 		msg.innerHTML = "VALID EMAIL";
@@ -43,11 +47,32 @@ function checkEmail(ele)
 		sub.disabled = true;
 	}
 }
+function checkUserName(ele)
+{	
+	var sub = document.getElementById("sub");
+	var msg = document.getElementById("msg2");
+	var email = document.getElementById("id_email")
+	if(validateUserName(ele.value) == true)
+	{
+		msg.innerHTML = "VALID USERNAME";
+		msg.style.color = "green";
+		sub.disabled = false;
+	}
+	else
+	{
+		msg.innerHTML = "INVALID USERNAME";
+		msg.style.color = "red";
+		sub.disabled = true;
+	}
+}
 function validateEmail(elementValue){        
    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;  
    return emailPattern.test(elementValue);   
  }   
-
+function validateUserName(elementValue){        
+   var UserNamePattern = /^[a-zA-Z0-9._-]{3,15}$/;  
+   return UserNamePattern.test(elementValue);   
+ }  
 
 </script>
 
