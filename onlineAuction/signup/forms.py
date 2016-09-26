@@ -4,8 +4,8 @@ from .models import *
 class UserForm(forms.ModelForm):#user form pre build class
     password = forms.CharField(widget=forms.PasswordInput,min_length=6)
     email=forms.EmailField(widget=forms.EmailInput(attrs={'onkeypress':'checkEmail(this)','onkeyup':'checkEmail(this)'}))
-    captcha=CaptchaField(output_format= u'%(hidden_field)s%(image)s<br>%(text_field)s')
-    userName=forms.CharField(label="Username:")
+    captcha=CaptchaField(output_format= u'%(hidden_field)s%(image)s%(text_field)s')
+    userName=forms.CharField(label="Username:",widget=forms.widgets.TextInput(attrs={'onkeypress':'checkUserName(this)','onkeyup':'checkUserName(this)'}))
     Choices=(('Book','Book'),('Vehicle','Vehicle'),('Coin or Stamp','Coin or Stamp'),('Antique','Antique'),
              ('Electronics','Electronics'),('Others','Others'))
     interests=forms.ChoiceField(choices=Choices, label = "Interest:")

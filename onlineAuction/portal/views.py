@@ -262,9 +262,15 @@ class RegForm(generic.edit.FormView):
                     art.privateusers_set.create(user = UserDetail.objects.get(name = str(users)))
                     mailList.append(UserDetail.objects.get(name = str(users)).email)
 
+                template =  "<body style= 'background-color:black;color:#ffffff;text-align:center;'>" +\
+                                "<h1>YOU ARE INVITED FOR A BID<h1><h3>PLEASE CLICK ON THE LINK BELLOW</h3>" +\
+                                "<a href = 'http://localhost:8000/portal/activeArticles/BidPage/" + str(art.id)+"'>"+str(art.articlename)+"</a>" +\
+                                "</body>"
                 send_mail("INVITED FOR BIDS",
                                 "", settings.EMAIL_HOST_USER,
-                                mailList,fail_silently = True)
+                                mailList,
+                                fail_silently = True,
+                                html_message=template)
             art.bids_set.create(userid=UserDetail.objects.get(pk=request.session['userID']),
                                 highestbid=request.POST['minbid'])
             art.save()
